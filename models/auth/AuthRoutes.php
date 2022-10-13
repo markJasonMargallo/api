@@ -1,8 +1,7 @@
 <?php
-require_once('./models/compiler/Compile.php');
-class CompileRoutes
-{
 
+class AuthRoutes
+{
     private $url;
     private string $method;
 
@@ -11,19 +10,22 @@ class CompileRoutes
 
         $this->url = explode('/', $url);
         $this->method = $method;
+        echo 'authRoutes Class';
     }
 
     public function handle_url()
     {
 
-        switch ($this->method) {
-            case 'POST':
-                $request_body = json_decode(file_get_contents('php://input'));
-                $language = $request_body->language;
-                $code = $request_body->code;
+        $request_body = json_decode(file_get_contents('php://input'));
 
-                $compile = new Compile($language, $code);
-                $compile->execute();
+        switch ($this->method) {
+
+            case 'POST':
+                if ($this->url == 'student-login') {
+                    $username = $request_body->username;
+                    echo $username;
+                }
+
                 break;
         }
     }

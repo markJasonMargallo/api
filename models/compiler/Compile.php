@@ -13,48 +13,57 @@ class Compile{
     public function execute(){
 
         $random = substr(md5(mt_rand()), 0, 7);
-        $filePath = __DIR__ ."/$random.$this->language";
+        $filePath  = "./temp/$random.$this->language";
+        // $filePath = __DIR__ ."/$random.$this->language";
         $programFile = fopen($filePath, 'w');
             
         try{ 
             fwrite($programFile, $this->code);
             fclose($programFile);
-            // chmod($filePath, 0777);
+            chmod($filePath,0777);
         }catch (Exception $e){
             echo $e;
         }
 
         
-  
         if($this->language == 'php'){
-            $output = shell_exec("php $filePath 2>$1");
+            $output = shell_exec("php $filePath 2>&1");
             echo $output;
         }
 
         
-        if($this->language == 'python'){
-            $output = shell_exec("python3 $filePath 2>$1");
+        if($this->language == 'py'){
+            $output = shell_exec("python3 $filePath 2>&1");
             echo $output;
         }
 
         
         if($this->language == 'js'){
-            $output = shell_exec("node $filePath 2>$1");
+            $output = shell_exec("node $filePath 2>&1");
             echo $output;
         }
 
         if($this->language == 'c'){
-            $outputExe = "$random.exe";
+            $outputExe = "temp/$random.exe";
             shell_exec("gcc $filePath -o $outputExe");
-            $output = shell_exec(__DIR__."//$outputExe");
+            chmod($outputExe,0777);
+            $output = shell_exec("$outputExe");
+            unlink($outputExe);
             echo $output;
         }
 
         if($this->language == 'cpp'){
-            $outputExe = "$random.exe";
+            $outputExe = "temp/$random.exe";
             shell_exec("g++ $filePath -o $outputExe");
-            $output = shell_exec(__DIR__."//$outputExe");
+            chmod($outputExe,0777);
+            $output = shell_exec("$outputExe");
+            unlink($outputExe);
             echo $output;
         }
+
+        unlink($filePath);
     }
 }
+
+
+

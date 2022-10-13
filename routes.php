@@ -1,6 +1,7 @@
 <?php
 require_once('./config/Config.php');
 require_once('./models/compiler/CompileRoutes.php');
+require_once('./models/auth/AuthRepository.php');
 
 // error_reporting(E_ALL ^ E_WARNING ^ E_DEPRECATED);
 
@@ -29,9 +30,15 @@ class Route {
         }
 
         if(str_starts_with($request, 'compile')){
-            $compileRoutes = new CompileRoutes($request, $request_method);
-            $compileRoutes->handle_url();
+            $compile_routes = new CompileRoutes($request, $request_method);
+            $compile_routes->handle_url();
+            
+        }else if(str_starts_with($request, 'auth')){
+            $auth_routes = new AuthRoutes($request, $request_method);
+            $auth_routes->handle_url();
         }
+
+        
     }
 }
 
