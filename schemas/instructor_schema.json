@@ -1,0 +1,16 @@
+{
+  "type": "object",
+  "properties": {
+    "first_name": {
+      "type": "string",
+      "minLength": 3
+    },
+    "last_name": {
+      "type": "string",
+      "minLength": 3
+    },
+    "middle_name": {
+      "type": "string"
+    }
+  }
+}

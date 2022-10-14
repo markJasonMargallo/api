@@ -1,30 +1,88 @@
 <?php
+require_once('./modules/Auth.php');
+require_once('./models/auth/AuthRepository.php');
+require_once('./modules/Procedural.php');
+require_once('./vendor/autoload.php');
+
 class AuthService
 {
     private AuthModule $auth_module;
+    private AuthRepository $auth_repository;
 
     public function __construct()
     {
         $this->auth_module = new AuthModule();
+        $this->auth_repository = new AuthRepository();
     }
+
+    // public function register_student($data)
+    // {
+    //     if (
+    //         $data->hei_id &&
+    //         $data->username &&
+    //         $data->email_address &&
+    //         $data->password
+    //     ) {
+    //         $hei = $this->hei_repository->get_hei_by_hei_id($data->hei_id);
+    //         $user = $this->auth_repository->get_user_by_hei_id($data->hei_id);
+
+    //         if ($user) {
+    //             return response(['message' => 'There can only be one user per HEI'], 400);
+    //         }
+
+    //         if (!$hei) {
+    //             return response(['message' => 'Invalid hei id'], 400);
+    //         }
+
+    //         $last_insert_id = $this->auth_repository->register_hei($data);
+
+    //         if ($last_insert_id['count']) {
+    //             $payload = [
+    //                 "id" => $last_insert_id['last_id'],
+    //                 "email_address" => $data->email_address,
+    //             ];
+
+    //             $code = 200;
+
+    //             return response($payload, $code);
+    //         }
+    //     } else {
+    //         return response(['message' => 'Invalid request body'], 400);
+    //     }
+    // }
 
     public function login_student($credentials): array
     {
-        if ($credentials->email_address && $credentials->password) {
-            $user = $this->auth_repository->get_user_by_email_address($credentials->email_address);
+
+        // Validate
+        $validator = new JsonSchema\Validator;
+        $validator->validate($credentials, (object)['$ref' => 'file://' . realpath('credentials_schema.json')]);
+
+        if ($validator->isValid()) {
+            echo "The supplied JSON validates against the schema.\n";
+        } else {
+            echo "JSON does not validate. Violations:\n";
+            foreach ($validator->getErrors() as $error) {
+                printf("[%s] %s\n", $error['property'], $error['message']);
+            }
+        }
+
+        if ($credentials->username && $credentials->password) {
+            $user = $this->auth_repository->get_student_account_by_username($credentials->username);
 
             if (!$user) {
+
                 return response(['message' => 'User not found'], 404);
             }
 
-            $verified_password = password_verify($credentials->password, $user['password']);
-
-            if (!$verified_password) {
+            // $verified_password = password_verify($credentials->password, $user['password']);
+            echo json_encode($user);
+            if ($credentials->password !== $user['password']) {
                 return response(['message' => 'Invalid credentials'], 401);
             }
 
             $refresh_token = $this->auth_module->generate_refresh_token($user['id']);
-            $access_token = $this->auth_module->generate_access_token($user['username'], 'student');
+            $access_token = $this->auth_module->generate_access_token($user['username'], $user['role']);
 
             // 432000s = 5 days
             $cookie_options = $this->get_cookie_options();
@@ -40,21 +98,22 @@ class AuthService
 
     public function login_instructor($credentials): array
     {
-        if ($credentials->email_address && $credentials->password) {
-            $user = $this->auth_repository->get_user_by_email_address($credentials->email_address);
+        if ($credentials->username && $credentials->password) {
+            $user = $this->auth_repository->get_instructor_account_by_username($credentials->username);
+
 
             if (!$user) {
                 return response(['message' => 'User not found'], 404);
             }
 
-            $verified_password = password_verify($credentials->password, $user['password']);
+            // $verified_password = password_verify($credentials->password, $user['password']);
 
-            if (!$verified_password) {
+            if ($credentials->password !== $user['password']) {
                 return response(['message' => 'Invalid credentials'], 401);
             }
 
             $refresh_token = $this->auth_module->generate_refresh_token($user['id']);
-            $access_token = $this->auth_module->generate_access_token($user['username'], 'instructor');
+            $access_token = $this->auth_module->generate_access_token($user['username'], $user['role']);
 
             // 432000s = 5 days
             $cookie_options = $this->get_cookie_options();
@@ -86,10 +145,10 @@ class AuthService
             $payload = base64_decode($tokenParts[1]);
             $credential_id = json_decode($payload)->id;
 
-            $user = $this->auth_repository->get_user_by_credential_id($credential_id);
+            $user = $this->auth_repository->get_account_by_id($credential_id);
 
             $refresh_token = $this->auth_module->generate_refresh_token($user['id']);
-            $access_token = $this->auth_module->generate_access_token($user['username'], $user['rolecode']);
+            $access_token = $this->auth_module->generate_access_token($user['username'], $user['role']);
 
             $cookie_options = $this->get_cookie_options();
 

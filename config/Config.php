@@ -9,6 +9,8 @@ header('Access-Control-Expose-Headers: Authorization');
 
 date_default_timezone_set('Asia/Manila');
 set_time_limit(1000);
+error_reporting(E_ALL);
+ini_set('display_errors', 'On');
 
 require_once('./vendor/autoload.php');
 

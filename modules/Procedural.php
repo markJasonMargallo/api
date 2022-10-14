@@ -44,6 +44,7 @@ function errorMessage($errcode)
  * 
  * @return Array The function response() is being returned.
  */
+
 function response($payload, $code): array
 {
     http_response_code($code);

@@ -1,0 +1,20 @@
+{
+  "type": "object",
+  "properties": {
+    "student_number": {
+      "type": "integer",
+      "minimum": 201900000
+    },
+    "first_name": {
+      "type": "string",
+      "minLength": 3
+    },
+    "last_name": {
+      "type": "string",
+      "minLength": 3
+    },
+    "middle_name": {
+      "type": "string"
+    }
+  }
+}

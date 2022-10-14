@@ -1,7 +1,7 @@
 <?php
 require_once('./config/Config.php');
 require_once('./models/compiler/CompileRoutes.php');
-require_once('./models/auth/AuthRepository.php');
+require_once('./models/auth/AuthRoutes.php');
 
 // error_reporting(E_ALL ^ E_WARNING ^ E_DEPRECATED);
 
@@ -19,7 +19,7 @@ class Route {
     }
 
     public function clientRequest(): void{
-        
+
         $request = $_REQUEST['request'];
         $request = str_replace('api/', '', $request);
         $request_method = $_SERVER['REQUEST_METHOD'];
@@ -30,10 +30,12 @@ class Route {
         }
 
         if(str_starts_with($request, 'compile')){
+            // echo 'api/';
             $compile_routes = new CompileRoutes($request, $request_method);
             $compile_routes->handle_url();
             
         }else if(str_starts_with($request, 'auth')){
+            // echo 'api/';
             $auth_routes = new AuthRoutes($request, $request_method);
             $auth_routes->handle_url();
         }

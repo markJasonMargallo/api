@@ -1,26 +1,13 @@
 <?php
 class Middleware{
-    private $token;
-    private $tokenParts;
-
-    /**
-     * @throws Exception
-     */
-    public function __construct()
-    {
-        if(isset(getallheaders()["Authorization"])){
-            $this->token = getallheaders()["Authorization"];
-            $this->tokenParts = explode('.', $this->token);
-        }
-        throw new Exception('Authorization Required');
-    }
-
     /**
      * @throws Exception
      */
     public function authorize() {
-        if($this->token !== 'null' && $this->is_authenticated()){
-            return $this;
+        if (isset(getallheaders()["Authorization"])) {
+            if (getallheaders()["Authorization"] !== 'null' and $this->is_authenticated(getallheaders()["Authorization"])) {
+                return $this;
+            }
         }
         throw new Exception('Unauthorized');
     }
@@ -29,8 +16,8 @@ class Middleware{
         return rtrim(strtr(base64_encode($str), '+/', '-_'), '=');
     }
 
-    public function is_authenticated(){
-        $token = $this->token;
+    public function is_authenticated($token){
+        $token = $token;
         $tokenParts = explode('.', $token);
         $header = base64_decode($tokenParts[0]);
         $payload = base64_decode($tokenParts[1]);
@@ -60,10 +47,13 @@ class Middleware{
 
     }
 
-    public function is_acess_token()
+    public function is_access_token($token)
     {
-        $payload = base64_decode($this->tokenParts[1]);
+        $tokenParts = explode('.', $token);
+        $payload = base64_decode($tokenParts[1]);
+
         $token_type = json_decode($payload)->type;
+
 
         if ($token_type !== 'access') {
             return false;
@@ -72,9 +62,11 @@ class Middleware{
         return true;
     }
 
-    public function is_refresh_token()
+    public function is_refresh_token($token)
     {
-        $payload = base64_decode($this->tokenParts[1]);
+        $tokenParts = explode('.', $token);
+        $payload = base64_decode($tokenParts[1]);
+
         $token_type = json_decode($payload)->type;
 
         if ($token_type !== 'refresh') {
@@ -84,25 +76,26 @@ class Middleware{
         return true;
     }
 
-    public function is_instructor()
-    {
-        $payload = base64_decode($this->tokenParts[1]);
-        $role = json_decode($payload)->role;
+    // public function is_instructor()
+    // {
+    //     $payload = base64_decode($this->tokenParts[1]);
+    //     $role = json_decode($payload)->role;
 
-        if ($role !== 'instructor') {
-            return false;
-        }
-        return true;
-    }
+    //     if ($role !== 'instructor') {
+    //         return false;
+    //     }
 
-    public function is_student()
-    {
-        $payload = base64_decode($this->tokenParts[1]);
-        $role = json_decode($payload)->role;
+    //     return true;
+    // }
 
-        if ($role !== 'student') {
-            return false;
-        }
-        return true;
-    }
+    // public function is_student()
+    // {
+    //     $payload = base64_decode($this->tokenParts[1]);
+    //     $role = json_decode($payload)->role;
+
+    //     if ($role !== 'student') {
+    //         return false;
+    //     }
+    //     return true;
+    // }
 }
