@@ -1,0 +1,25 @@
+{
+  "type": "object",
+  "properties": {
+    "iss": {
+      "type": "string",
+      "required" : true
+    },
+    "aud": {
+      "type": "string",
+      "required": true
+    },
+    "type": {
+      "type": "string",
+      "required": true
+    },
+    "iat": {
+      "type": "integer",
+      "required": true
+    },
+    "exp": {
+      "type": "integer",
+      "required": true
+    }
+  }
+}
