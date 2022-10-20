@@ -1,7 +1,8 @@
 <?php
 enum QueryTypes
 {
-    case INSERT;
-    case SELECT;
-    case UPDATE;
+    case ADD_RECORD_GET_ID;
+    case SELECT_RECORD;
+    case FIND_RECORD_EXISTENCE;
+    case UPDATE_RECORD;
 }

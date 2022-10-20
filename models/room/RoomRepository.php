@@ -11,10 +11,10 @@ class RoomRepository
 
         $this->connection = new Connection();
         $this->pdo = $this->connection->connect();
-        
     }
 
-    public function add_room($room_name, $instructor_id){
+    public function add_room($room_name, $instructor_id)
+    {
         $sql = 'INSERT INTO rooms (room_name, instructor_id) VALUES (?, ?)';
         $sql = $this->pdo->prepare($sql);
         $sql->execute([
@@ -22,7 +22,7 @@ class RoomRepository
             $instructor_id
         ]);
 
-        $account_id= $this->pdo->lastInsertId();
+        $account_id = $this->pdo->lastInsertId();
 
         return $account_id;
     }
@@ -82,7 +82,7 @@ class RoomRepository
     {
         $sql = "SELECT * FROM instructors AS I
                 JOIN room AS R on R.instructor_id = I.instructor_id
-                WHERE R.is_deleted = 0 AND R.instructor_id = ?"; 
+                WHERE R.is_deleted = 0 AND R.instructor_id = ?";
         $sql = $this->pdo->prepare($sql);
         $sql->execute([
             $room_id,
@@ -166,5 +166,4 @@ class RoomRepository
 
         return ['count' => $COUNT];
     }
-
 }

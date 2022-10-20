@@ -41,4 +41,9 @@ class Middleware
     {
         return $this->token->get_payload()->id;
     }
+
+    public function get_owner_email()
+    {
+        return $this->token->get_owner_email();
+    }
 }

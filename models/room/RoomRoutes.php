@@ -1,39 +1,45 @@
 <?php
-require_once('./models/middleware/Middleware.php');
 require_once('./models/room/RoomService.php');
 
 
 class RoomRoutes extends Middleware
 {
-    private $url;
-    private string $method;
-    private AuthService $auth_service;
+    private RoomService $room_service;
+    private Request $request_data;
+    private Middleware $middleware;
 
-    public function __construct(string $url, string $method)
+    public function __construct(Request $request_data)
     {
-        // echo 'auth/';
-        $this->url = str_replace('auth/', '', $url);
-        $this->method = $method;
-        $this->auth_service = new AuthService();
+        $this->request_data = $request_data;
+
+        if ($this->request_data->is_header_provided()) {
+
+            $this->middleware = new Middleware($this->request_data->get_header());
+
+            if(!$this->middleware->is_instructor()){
+                throw new Exception("You are not a teacher.");
+            }
+
+        } else {
+            throw new Exception("Authentication Required");
+        }
+
+        $this->url = str_replace('room/', '', $this->request_data->get_request_url());
+        $this->method = $this->request_data->get_request_method();
+        $this->room_service = new RoomService();
     }
 
     public function handle_url()
     {
         $request_body = json_decode(file_get_contents('php://input'));
+        
 
         switch ($this->method) {
 
             case 'POST':
-                if ($this->url == 'student-login') {
-                    echo json_encode($this->auth_service->login_student($request_body));
+                if ($this->url == 'create') {
+                    echo json_encode($this->room_service->create_room($request_body, $this->middleware->get_owner_email()));
                 }else if ($this->url == 'instructor-login') {
-                    echo json_encode($this->auth_service->login_instructor($request_body));
-                }else if ($this->url == 'register-student') {
-                    echo json_encode($this->auth_service->register_student($request_body));
-                }else if ($this->url == 'register-instructor') {
-                    echo json_encode($this->auth_service->register_instructor($request_body));
-                }else if ($this->url == 'refresh-token') {
-                    echo json_encode($this->auth_service->refresh_token());
                 }
                 break;
         }

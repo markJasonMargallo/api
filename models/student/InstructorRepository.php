@@ -1,8 +1,9 @@
 <?php
+
 require_once('./modules/QueryHandlerModule.php');
 require_once('./enums/QueryTypes.php');
 
-class AuthRepository
+class InstructorRepository
 {
     private QueryHandlerModule $query_handler;
 
@@ -11,18 +12,21 @@ class AuthRepository
         $this->query_handler = new QueryHandlerModule();
     }
 
-    public function get_account($email)
+    public function get_instructor($account_email)
     {
-        $sql = "SELECT * FROM accounts WHERE email = ?";
-        $values = [$email];
+        $sql = "SELECT S.instructor_id FROM instructors as S
+                JOIN accounts as A ON S.account_id = A.account_id
+                WHERE A.email = ? AND A.role = 'instructor' AND A.is_deleted = 0;";
 
-        return $this->query_handler->handle_query($sql, $values, QueryTypes::FIND_RECORD_EXISTENCE);
+        $values = [$account_email];
+
+        return $this->query_handler->handle_query($sql, $values, QueryTypes::SELECT_RECORD);
     }
 
     public function add_account($credential, $role)
     {
         $sql = 'INSERT INTO accounts (email, password, role) VALUES (?, ?, ?)';
-        $values = [$credential->email, password_hash($credential->password, PASSWORD_BCRYPT),$role];
+        $values = [$credential->email, password_hash($credential->password, PASSWORD_BCRYPT), $role];
 
         return $this->query_handler->handle_query($sql, $values, QueryTypes::ADD_RECORD_GET_ID);
     }
@@ -49,7 +53,7 @@ class AuthRepository
                 FROM accounts AS a WHERE a.is_deleted = 0 AND a.account_id= ?";
         $values = [$id];
 
-        return $this->query_handler->handle_query($sql, $values, QueryTypes::SELECT_RECORD);  
+        return $this->query_handler->handle_query($sql, $values, QueryTypes::FIND_RECORD_EXISTENCE);
     }
 
     public function get_instructor_account($email)
@@ -70,3 +74,4 @@ class AuthRepository
         return $this->query_handler->handle_query($sql, $values, QueryTypes::SELECT_RECORD);
     }
 }
+

@@ -2,10 +2,11 @@
 require_once('./enums/QueryTypes.php');
 require_once('./config/Config.php');
 
-class QueryHandlerModule{
+class QueryHandlerModule
+{
 
-    protected PDO $pdo;
-    protected Connection $connection;
+    private PDO $pdo;
+    private Connection $connection;
 
 
     public function __construct()
@@ -19,23 +20,36 @@ class QueryHandlerModule{
      * @param  string $sql the string sql query
      * @param  array $values the values to be mapped against the sql query
      */
-    public function handle_query(string $sql, array $values, QueryTypes $query_type){
+    public function handle_query(string $sql, array $values, QueryTypes $query_type)
+    {
 
         $output = null;
 
-        $sql = $this->pdo->prepare($sql);
-        $sql->execute($values);
+        try {
 
-        switch ($query_type) {
-            case QueryTypes::SELECT:
-                
-                break;
-            case QueryTypes::INSERT:
-                break;
-            case QueryTypes::UPDATE:
-                break;
+            $sql = $this->pdo->prepare($sql);
+            $sql->execute($values);
+
+            switch ($query_type) {
+                case QueryTypes::FIND_RECORD_EXISTENCE:
+                    $res = $sql->fetch();
+                    $output = ($res) ? true : false;
+                    break;
+                case QueryTypes::SELECT_RECORD:
+                    $user = $sql->fetch();
+                    $output = ($user) ? $user : null;
+                    break;
+                case QueryTypes::ADD_RECORD_GET_ID:
+                    $output = $this->pdo->lastInsertId();
+                    break;
+                case QueryTypes::UPDATE_RECORD:
+                    $output = $sql->rowCount();
+                    break;
+            }
+        } catch (\PDOException $e) {
+            return response(['message' => $e->getMessage()], 400);
         }
 
+        return $output;
     }
-
 }

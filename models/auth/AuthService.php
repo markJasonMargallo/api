@@ -52,7 +52,7 @@ class AuthService
             }
 
             $account_id = $this->auth_repository->add_account($account_data, 'instructor');
-            
+
             if ($this->auth_repository->add_instructor($instructor_data, $account_id) > 0) {
                 return response(['message' => 'Instructor registration successful'], 200);
             }
@@ -65,7 +65,7 @@ class AuthService
     {
         if ($this->validator->is_body_valid($credentials, './schemas/credential_schema.json')) {
 
-            $user = $this->auth_repository->get_student_account_by_email($credentials->email);
+            $user = $this->auth_repository->get_student_account($credentials->email);
 
             if (!$user) {
                 return response(['message' => 'User not found'], 404);
@@ -98,7 +98,7 @@ class AuthService
     {
         if ($this->validator->is_body_valid($credentials, './schemas/credential_schema.json')) {
 
-            $user = $this->auth_repository->get_instructor_account_by_email($credentials->email);
+            $user = $this->auth_repository->get_instructor_account($credentials->email);
 
             if (!$user) {
                 return response(['message' => 'User not found'], 404);
@@ -143,21 +143,17 @@ class AuthService
             $refresh_token = $this->auth_module->generate_refresh_token($user['id']);
             $access_token = $this->auth_module->generate_access_token($user['email'], $user['id'], $user_role);
 
-            //set http-only cookie
-            $cookie_module = new CookieModule($refresh_token);
-            $cookie_module->set_cookie();
+            // //set http-only cookie
+            // $cookie_module = new CookieModule($refresh_token);
+            // $cookie_module->set_cookie();
 
             //set Authorization header
             header('Authorization: ' . $access_token);
             http_response_code(200);
 
             return response(['message' => 'Logged in'], 200);
-
-        }else{
-
+        } else {
             return response(['message' => 'Invalid refresh token'], 200);
-
         }
-        
     }
 }
