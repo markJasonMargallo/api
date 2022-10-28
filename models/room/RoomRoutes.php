@@ -17,7 +17,7 @@ class RoomRoutes extends Middleware
             $this->middleware = new Middleware($this->request_data->get_header());
 
             if(!$this->middleware->is_instructor()){
-                throw new Exception("You are not a teacher.");
+                throw new Exception("Unauthorized");
             }
 
         } else {
@@ -32,14 +32,14 @@ class RoomRoutes extends Middleware
     public function handle_url()
     {
         $request_body = json_decode(file_get_contents('php://input'));
-        
 
         switch ($this->method) {
 
             case 'POST':
                 if ($this->url == 'create') {
-                    echo json_encode($this->room_service->create_room($request_body, $this->middleware->get_owner_email()));
+                    echo json_encode($this->room_service->add_room($request_body, $this->middleware->get_owner_email()));
                 }else if ($this->url == 'instructor-login') {
+
                 }
                 break;
         }

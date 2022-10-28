@@ -22,11 +22,9 @@ class QueryHandlerModule
      */
     public function handle_query(string $sql, array $values, QueryTypes $query_type)
     {
-
         $output = null;
 
         try {
-
             $sql = $this->pdo->prepare($sql);
             $sql->execute($values);
 
@@ -42,14 +40,17 @@ class QueryHandlerModule
                 case QueryTypes::ADD_RECORD_GET_ID:
                     $output = $this->pdo->lastInsertId();
                     break;
+                case QueryTypes::ADD_RECORD:
+                    $output = ($this->pdo->lastInsertId() > 0) ? true : false;
+                    break;
                 case QueryTypes::UPDATE_RECORD:
-                    $output = $sql->rowCount();
+                    $output = ($sql->rowCount() > 0) ? true : false;
                     break;
             }
         } catch (\PDOException $e) {
+
             return response(['message' => $e->getMessage()], 400);
         }
-
         return $output;
     }
 }
