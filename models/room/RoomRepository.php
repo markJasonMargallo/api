@@ -1,5 +1,4 @@
 <?php
-require_once('./config/Config.php');
 require_once('./modules/QueryHandlerModule.php');
 require_once('./models/room/RoomTemplate.php');
 
