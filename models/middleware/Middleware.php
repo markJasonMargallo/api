@@ -46,4 +46,9 @@ class Middleware
     {
         return $this->token->get_owner_email();
     }
+
+    public function get_owner_id()
+    {
+        return $this->token->get_owner_id();
+    }
 }

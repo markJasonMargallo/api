@@ -17,8 +17,8 @@ class QueryHandlerModule
 
     /**
      * @param QueryTypes $query_type the type of query to be executed
-     * @param  string $sql the string sql query
-     * @param  array $values the values to be mapped against the sql query
+     * @param string $sql the string sql query
+     * @param array $values the values to be mapped against the sql query
      */
     public function handle_query(string $sql, array $values, QueryTypes $query_type)
     {
@@ -34,8 +34,12 @@ class QueryHandlerModule
                     $output = ($res) ? true : false;
                     break;
                 case QueryTypes::SELECT_RECORD:
-                    $user = $sql->fetch();
-                    $output = ($user) ? $user : null;
+                    $users = $sql->fetch();
+                    $output = ($users) ? $users : null;
+                    break;
+                case QueryTypes::SELECT_MULTIPLE_RECORDS:
+                    $users = $sql->fetchAll();
+                    $output = ($users) ? $users : null;
                     break;
                 case QueryTypes::ADD_RECORD_GET_ID:
                     $output = $this->pdo->lastInsertId();
@@ -47,8 +51,8 @@ class QueryHandlerModule
                     $output = ($sql->rowCount() > 0) ? true : false;
                     break;
             }
-        } catch (\PDOException $e) {
 
+        } catch (\PDOException $e) {
             return response(['message' => $e->getMessage()], 400);
         }
         return $output;

@@ -35,6 +35,8 @@ class Route
         } else if (str_starts_with($request_url, 'room')) {
             $room_routes = new RoomRoutes($request_data);
             $room_routes->handle_url();
+        }else{
+            http_response_code(404);
         }
     }
 }
