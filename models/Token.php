@@ -2,6 +2,7 @@
 require_once('./enums/TokenTypes.php');
 require_once('./enums/RoleTypes.php');
 require_once('./modules/Validation.php');
+require_once('./models/exception/AuthorizationException.php');
 
 class Token
 {
@@ -67,10 +68,12 @@ class Token
 
             $token = str_replace('Bearer', '', $extracted_token);
 
-            $tokenParts = explode('.', $token); //tama
+            
 
-            $extracted_header = base64_decode($tokenParts[0]); //tama
-            $extracted_payload = base64_decode($tokenParts[1]); //tama
+            $tokenParts = explode('.', $token);
+
+            $extracted_header = base64_decode($tokenParts[0]);
+            $extracted_payload = base64_decode($tokenParts[1]);
             $extracted_signature = $tokenParts[2];
 
             $this->encoded_header = $tokenParts[0];
@@ -85,21 +88,21 @@ class Token
 
                 // check if access token payload is valid
                 if (!$this->validator->is_body_valid($this->get_payload(), './schemas/access_token_payload_schema.json')) {
-                    echo json_encode($this->validator->invalid_body());
-                    throw new Exception('Invalid Token.');
+                    // $this->validator->invalid_body();
+                    throw new AuthorizationException();
                 }
             } elseif ($extracted_token_type == TokenTypes::REFRESH) {
 
                 // check if refresh token payload is valid
                 if (!$this->validator->is_body_valid($this->get_payload(), './schemas/refresh_token_payload_schema.json')) {
-                    echo json_encode($this->validator->invalid_body());
-                    throw new Exception('Invalid Token.');
+                    // $this->validator->invalid_body();
+                    throw new AuthorizationException();
                 }
             }
 
             // check if token is valid
             if (!$this->is_token_valid()) {
-                throw new Exception('Invalid Token.');
+                throw new AuthorizationException();
             }
         }
     }

@@ -1,6 +1,8 @@
 <?php
 require_once('./modules/Procedural.php');
 require_once('./vendor/autoload.php');
+require_once('./models/exception/BadRequestException.php');
+
 
 use JsonSchema\Validator;
 
@@ -27,10 +29,7 @@ class Validation{
         $error_property = $errors['property'];
         $error_message = $errors['message'];
 
-        return response(['message' => "$error_property: $error_message"], 403);
-
-        // return response(['message' => "Invalid request body."], 403);
+        throw new BadRequestException("$error_property : $error_message");
+        // throw new BadRequestException();
     }
-
-
 }
