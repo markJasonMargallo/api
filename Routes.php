@@ -3,7 +3,7 @@ require_once('./config/Config.php');
 require_once('./models/compiler/CompileRoutes.php');
 require_once('./models/auth/AuthRoutes.php');
 require_once('./models/Request.php');
-require_once('./models/room/RoomRoutes.php');
+require_once('./models/instructor/InstructorRoutes.php');
 // require_once('./models/exception/BadRequestException.php');
 
 
@@ -34,9 +34,9 @@ class Route
             } else if (str_starts_with($request_url, 'auth')) {
                 $auth_routes = new AuthRoutes($request_data);
                 $auth_routes->handle_url();
-            } else if (str_starts_with($request_url, 'room')) {
-                $room_routes = new RoomRoutes($request_data);
-                $room_routes->handle_url();
+            } else if (str_starts_with($request_url, 'instructor')) {
+                $instructor_routes = new InstructorRoutes($request_data);
+                $instructor_routes->handle_url();
             } else {
                 http_response_code(404);
             }

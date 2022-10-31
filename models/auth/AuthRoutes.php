@@ -31,7 +31,7 @@ class AuthRoutes
                     echo json_encode($this->auth_service->register_student($body));
                 }else if ($url == 'register-instructor') {
                     echo json_encode($this->auth_service->register_instructor($body));
-                }else if ($url == 'refresh-token') {
+                }else if ($url == 'refresh') {
                     echo json_encode($this->auth_service->refresh_token());
                 }
                 break; 

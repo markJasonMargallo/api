@@ -1,7 +1,7 @@
 <?php
 
-require_once('./models/room/RoomRepository.php');
-require_once('./models/room/RoomTemplate.php');
+require_once('./models/instructor/room/RoomRepository.php');
+require_once('./models/instructor/room/RoomTemplate.php');
 require_once('./models/student/InstructorService.php');
 require_once('./modules/Procedural.php');
 require_once('./modules/Validation.php');
@@ -45,43 +45,18 @@ class RoomService implements RoomTemplate
         return response($this->room_repository->search_rooms($search_string), 200);
     }
 
-    public function get_rooms_by_instructor($instructor_id)
+    public function get_rooms($instructor_id)
     {
-        return response($this->room_repository->get_rooms_by_instructor($instructor_id), 200);
+        return response($this->room_repository->get_rooms($instructor_id), 200);
     }
 
-    public function get_room_instructor($room_id)
+    public function update_room($room_data, $room_id)
     {
-        return response($this->room_repository->get_room_instructor($room_id), 200);
-    }
-
-    public function get_rooms_by_student($student_id)
-    {
-        return response($this->room_repository->get_rooms_by_student($student_id), 200);
-    }
-
-    public function get_room_activities($room_id)
-    {
-        return response($this->room_repository->get_room_activities($room_id), 200);
-    }
-
-    public function update_room_name($room_name, $room_id)
-    {
-        return response($this->room_repository->update_room_name($room_name, $room_id), 200);
+        return response($this->room_repository->update_room($room_data->room_name, $room_id), 200);
     }
 
     public function delete_room($room_id)
     {
         return response($this->room_repository->delete_room($room_id), 200);
-    }
-
-    public function get_room_participants($room_id)
-    {
-        return response($this->room_repository->get_room_participants($room_id), 200);
-    }
-
-    public function add_room_participant($room_id, $student_id)
-    {
-        return response($this->room_repository->add_room_participant($room_id, $student_id), 200);
     }
 }

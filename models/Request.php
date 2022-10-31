@@ -25,6 +25,10 @@ class Request{
         return $this->auth_header;
     }
 
+    public function set_url(string $new_url){
+        $this->request_url = $new_url;
+    }
+
     public function is_header_provided(){
         return $this->header_provided;
     }

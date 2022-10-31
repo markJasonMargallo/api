@@ -1,10 +1,12 @@
 <?php
-require_once('./models/room/RoomService.php');
+require_once('./models/exception/NotFoundException.php');
+require_once('./models/instructor/room/RoomService.php');
+require_once('./models/instructor/room/RoomRoutes.php');
 require_once('./models/exception/AuthorizationException.php');
-require_once('./models/exception//AuthenticationException.php');
+require_once('./models/exception/AuthenticationException.php');
 
 
-class RoomRoutes extends Middleware
+class InstructorRoutes
 {
     private RoomService $room_service;
     private Request $request_data;
@@ -14,7 +16,7 @@ class RoomRoutes extends Middleware
     {
         $this->request_data = $request_data;
 
-        if ($this->request_data->is_header_provided()) {
+        if ($this->request_data->is_header_provided()) { 
 
             $this->middleware = new Middleware($this->request_data->get_header());
 
@@ -25,35 +27,35 @@ class RoomRoutes extends Middleware
             throw new AuthenticationException();
         }
 
-        // $this->url = str_replace('room/', '', $this->request_data->get_request_url());
-        $this->url = explode('/', $this->request_data->get_request_url());
-        $this->method = $this->request_data->get_request_method();
+
+        $trimmed_url= str_replace('instructor/', '', $this->request_data->get_request_url());
+        $this->request_data->set_url($trimmed_url);
+        $this->url = explode('/', $trimmed_url);
         $this->room_service = new RoomService();
     }
 
     public function handle_url()
     {
-        $request_body = json_decode(file_get_contents('php://input'));
+        $url = $this->url;
+        $current_route = $url[0];
+        $count = count($url);
+        $next_route = null;
+        if ($count > 1) {
+            $next_route = $url[1];
+        }
 
-        switch ($this->method) {
-            case 'POST':
-                if (count($this->url) == 1) {
-                    if ($this->url[0] == 'room') {
-                        echo json_encode($this->room_service->add_room($request_body, $this->middleware->get_owner_email()));
-                    }
+        switch ($current_route) { 
+            case ('room' || 'rooms'):
+                if($next_route == 'activity'){
+                    echo "activity routes";
+                }else{
+                    $room_routes = new RoomRoutes($this->request_data, $this->middleware);
+                    $room_routes->handle_url();
                 }
+                
                 break;
-            case 'GET':
-                if (count($this->url) == 2) {
-                    if ($this->url[0] == 'room') {
-                        echo json_encode($this->room_service->get_room($this->url[1]));
-                    }
-                } else if (count($this->url) == 1) {
-                    if ($this->url[0] == 'rooms') {
-                        echo json_encode($this->room_service->get_rooms_by_instructor($this->middleware->get_owner_id()));
-                    }
-                }
-                break;
+            default:
+                throw new NotFoundException();
         }
     }
 }
