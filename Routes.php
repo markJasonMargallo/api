@@ -4,7 +4,6 @@ require_once('./models/compiler/CompileRoutes.php');
 require_once('./models/auth/AuthRoutes.php');
 require_once('./models/Request.php');
 require_once('./models/instructor/InstructorRoutes.php');
-// require_once('./models/exception/BadRequestException.php');
 
 
 // error_reporting(E_ALL ^ E_WARNING ^ E_DEPRECATED);

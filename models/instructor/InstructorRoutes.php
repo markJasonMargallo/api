@@ -46,13 +46,8 @@ class InstructorRoutes
 
         switch ($current_route) { 
             case ('room' || 'rooms'):
-                if($next_route == 'activity'){
-                    echo "activity routes";
-                }else{
-                    $room_routes = new RoomRoutes($this->request_data, $this->middleware);
-                    $room_routes->handle_url();
-                }
-                
+                $room_routes = new RoomRoutes($this->request_data, $this->middleware);
+                $room_routes->handle_url();
                 break;
             default:
                 throw new NotFoundException();

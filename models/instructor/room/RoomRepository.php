@@ -33,7 +33,7 @@ class RoomRepository implements RoomTemplate
         $sql = "SELECT * FROM rooms WHERE is_deleted = 0 AND room_name LIKE CONCAT('%',?,'%');";
         $values = [$search_string];
 
-        return $this->query_handler->handle_query($sql, $values, QueryTypes::SEARCH_MULTIPLE_RECORDS);
+        return $this->query_handler->handle_query($sql, $values, QueryTypes::SEARCH_RECORDS);
 
     }
 

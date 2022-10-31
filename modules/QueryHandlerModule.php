@@ -30,7 +30,7 @@ class QueryHandlerModule
 
             $sql = $this->pdo->prepare($sql);
 
-            if ($query_type == QueryTypes::SEARCH_MULTIPLE_RECORDS) {
+            if ($query_type == QueryTypes::SEARCH_RECORDS) {
                 $sql->bindParam(1, $values[0]);
                 $sql->execute();
             }else{
@@ -51,7 +51,7 @@ class QueryHandlerModule
                     $users = $sql->fetchAll();
                     $output = ($users) ? $users : null;
                     break;
-                case QueryTypes::SEARCH_MULTIPLE_RECORDS:
+                case QueryTypes::SEARCH_RECORDS:
                     $users = $sql->fetchAll();
                     $output = ($users) ? $users : null;
                     break;

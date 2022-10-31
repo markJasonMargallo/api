@@ -5,7 +5,7 @@ enum QueryTypes
     case ADD_RECORD;
     case SELECT_RECORD;
     case SELECT_MULTIPLE_RECORDS;
-    case SEARCH_MULTIPLE_RECORDS;
+    case SEARCH_RECORDS;
     case FIND_RECORD_EXISTENCE;
     case UPDATE_RECORD;
 }

@@ -1,9 +1,10 @@
 <?php
 require_once('./modules/QueryHandlerModule.php');
-require_once('./models/room/RoomTemplate.php');
+require_once('./models/instructor/activity/ActivityTemplate.php');
 
 class ActivityRepository implements ActivityTemplate
 {
+
 
     private QueryHandlerModule $query_handler;
 
@@ -14,7 +15,7 @@ class ActivityRepository implements ActivityTemplate
 
     public function add_activity($room_id, $activity_data)
     {
-        $sql = 'INSERT INTO activities (activity_name, activity_description, room_id, deadline, language_assigned) 
+        $sql = 'INSERT INTO activities (activity_name, activity_description, room_id, deadline, language_specified) 
         VALUES (?, ?, ?, ?, ?);';
 
         $values = [
@@ -22,7 +23,7 @@ class ActivityRepository implements ActivityTemplate
             $activity_data->activity_description,
             $room_id,
             $activity_data->deadline,
-            $activity_data->language_assigned,
+            $activity_data->language_specified,
         ];
 
         return $this->query_handler->handle_query($sql, $values, QueryTypes::ADD_RECORD);
@@ -38,26 +39,34 @@ class ActivityRepository implements ActivityTemplate
 
     public function search_activity($search_string)
     {
-        $sql = "SELECT * FROM activities WHERE is_deleted = 0 AND activity_name LIKE '%?%';";
+        $sql = "SELECT * FROM activities WHERE is_deleted = 0 AND activity_name LIKE CONCAT('%',?,'%');;";
         $values = [$search_string];
 
-        return $this->query_handler->handle_query($sql, $values, QueryTypes::SELECT_RECORD);
+        return $this->query_handler->handle_query($sql, $values, QueryTypes::SEARCH_RECORDS);
     }
 
-    public function get_room_activities($room_id)
+    public function get_activities($room_id, $instructor_id)
     {
-        $sql = "SELECT * FROM activities
-                WHERE is_deleted = 0 AND room_id = ?;";
-        $values = [$room_id];
+        $sql = "SELECT * FROM activities AS A JOIN rooms AS R ON A.room_id = R.room_id
+                WHERE A.is_deleted = 0 AND A.room_id = ? AND R.instructor_id = ?;";
+        $values = [$room_id, $instructor_id];
 
-        return $this->query_handler->handle_query($sql, $values, QueryTypes::SELECT_RECORD);
+        return $this->query_handler->handle_query($sql, $values, QueryTypes::SELECT_MULTIPLE_RECORDS);
     }
 
-    public function update_activity($activity_data, $activity_id)
+    public function update_activity($activity_data)
     {
-        $sql = "UPDATE activities SET activity_name = ?
-                WHERE is_deleted = 0 AND activity_id = ?;";
-        $values = [$activity_data, $activity_id];
+        echo json_encode($activity_data);
+        $sql = "UPDATE activities SET activity_name = ?, activity_description = ?, deadline = ?, language_specified = ?
+                WHERE activity_id = ? AND is_deleted = 0;";
+
+        $values = [
+            $activity_data->activity_name,
+            $activity_data->activity_description,
+            $activity_data->deadline,
+            $activity_data->language_specified,
+            $activity_data->activity_id
+        ];
 
         return $this->query_handler->handle_query($sql, $values, QueryTypes::UPDATE_RECORD);
     }
