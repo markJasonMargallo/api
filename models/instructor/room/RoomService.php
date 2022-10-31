@@ -50,13 +50,22 @@ class RoomService implements RoomTemplate
         return response($this->room_repository->get_rooms($instructor_id), 200);
     }
 
-    public function update_room($room_data, $room_id)
+    public function update_room($room_data)
     {
-        return response($this->room_repository->update_room($room_data->room_name, $room_id), 200);
+        if($this->room_repository->update_room($room_data)){
+            return response(["message" => "Room updated."], 200);
+        }else{
+            return response(["message" => "Nothing to update."], 400);
+        }
+        
     }
 
     public function delete_room($room_id)
     {
-        return response($this->room_repository->delete_room($room_id), 200);
+        if ($this->room_repository->delete_room($room_id)) {
+            return response(["message" => "Room deleted."], 200);
+        } else {
+            return response(["message" => "Resource not found."], 404);
+        }
     }
 }

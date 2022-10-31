@@ -28,6 +28,7 @@ class RoomRoutes
 
         $request_body = json_decode(file_get_contents('php://input'));
 
+        $params = $this->request_data->get_request_params();
         $url = $this->url;
         $count = count($url);
         $current_route = $url[0];
@@ -44,12 +45,20 @@ class RoomRoutes
                 }
                 break;
             case 'GET':
-                if ($current_route == 'room'&& $count == 2) {
-                    if (intval($next_route) > 0){
-                        echo json_encode($this->room_service->get_room($next_route));
-                    }else{
-                        throw new NotFoundException();
-                    }
+                if ($params) {
+                    echo json_encode($this->room_service->search_rooms($params['search']));
+                    echo $params['search'];
+                }
+
+                if ($current_route == 'room' && $count == 2) {
+                    
+                        if (intval($next_route) > 0) {
+                            echo json_encode($this->room_service->get_room($next_route));
+                        } else {
+                            throw new NotFoundException();
+                        }
+                    
+                    
                 }else if($current_route == 'rooms'){
                     echo json_encode($this->room_service->get_rooms($this->middleware->get_owner_id()));
                 }
@@ -61,11 +70,12 @@ class RoomRoutes
                 break;
             case 'DELETE':
                 if ($current_route == 'room') {
-                    echo json_encode($this->room_service->get_room($next_route));
+                    echo json_encode($this->room_service->delete_room($next_route));
                 }
                 break;
             default:
                 throw new NotFoundException();
+                break;
         }
     }
 }

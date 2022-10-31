@@ -9,7 +9,7 @@ interface RoomTemplate
 
     public function get_rooms($instructor_id);
 
-    public function update_room($room_name, $room_id);
+    public function update_room($room_data);
 
     public function delete_room($room_id);
 }

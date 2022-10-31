@@ -23,10 +23,20 @@ class QueryHandlerModule
     public function handle_query(string $sql, array $values, QueryTypes $query_type)
     {
         $output = null;
+        $query = null;
 
         try {
+            
+
             $sql = $this->pdo->prepare($sql);
-            $sql->execute($values);
+
+            if ($query_type == QueryTypes::SEARCH_MULTIPLE_RECORDS) {
+                $sql->bindParam(1, $values[0]);
+                $sql->execute();
+            }else{
+                $sql->execute($values);
+            }
+            
 
             switch ($query_type) {
                 case QueryTypes::FIND_RECORD_EXISTENCE:
@@ -38,6 +48,10 @@ class QueryHandlerModule
                     $output = ($users) ? $users : null;
                     break;
                 case QueryTypes::SELECT_MULTIPLE_RECORDS:
+                    $users = $sql->fetchAll();
+                    $output = ($users) ? $users : null;
+                    break;
+                case QueryTypes::SEARCH_MULTIPLE_RECORDS:
                     $users = $sql->fetchAll();
                     $output = ($users) ? $users : null;
                     break;

@@ -30,10 +30,10 @@ class RoomRepository implements RoomTemplate
 
     public function search_rooms($search_string)
     {
-        $sql = "SELECT * FROM rooms WHERE is_deleted = 0 AND room_name LIKE '%?%';";
+        $sql = "SELECT * FROM rooms WHERE is_deleted = 0 AND room_name LIKE CONCAT('%',?,'%');";
         $values = [$search_string];
 
-        return $this->query_handler->handle_query($sql, $values, QueryTypes::SELECT_RECORD);
+        return $this->query_handler->handle_query($sql, $values, QueryTypes::SEARCH_MULTIPLE_RECORDS);
 
     }
 
@@ -45,11 +45,11 @@ class RoomRepository implements RoomTemplate
         return $this->query_handler->handle_query($sql, $values, QueryTypes::SELECT_MULTIPLE_RECORDS);
     }
 
-    public function update_room($room_name, $room_id)
+    public function update_room($room_data)
     {
         $sql = "UPDATE rooms SET room_name = ?
                 WHERE is_deleted = 0 AND room_id = ?;";
-        $values = [$room_name, $room_id];
+        $values = [$room_data->room_name, $room_data->room_id];
 
         return $this->query_handler->handle_query($sql, $values, QueryTypes::UPDATE_RECORD);
     }
