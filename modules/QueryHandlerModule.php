@@ -48,12 +48,12 @@ class QueryHandlerModule
                     $output = ($users) ? $users : null;
                     break;
                 case QueryTypes::SELECT_MULTIPLE_RECORDS:
-                    $users = $sql->fetchAll();
-                    $output = ($users) ? $users : null;
+                    $res = $sql->fetchAll();
+                    $output = ($res) ? $res : null;
                     break;
                 case QueryTypes::SEARCH_RECORDS:
-                    $users = $sql->fetchAll();
-                    $output = ($users) ? $users : null;
+                    $res = $sql->fetchAll();
+                    $output = ($res) ? $res : null;
                     break;
                 case QueryTypes::ADD_RECORD_GET_ID:
                     $output = $this->pdo->lastInsertId();

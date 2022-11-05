@@ -1,6 +1,7 @@
 <?php
 require_once('./models/instructor/activity/ActivityService.php');
 require_once('./models/exception/NotFoundException.php');
+require_once('./models/instructor/item/ItemRoutes.php');
 
 class ActivityRoutes
 {
@@ -36,43 +37,49 @@ class ActivityRoutes
             $next_route = $url[1];
         }
 
-        switch ($this->method) {
-            case 'POST':
-                echo $this->middleware->get_owner_id();
-                if ($current_route == 'activity' && $count == 1) {
-                    echo json_encode($this->activity_service->add_activity($this->middleware->get_owner_id(), $request_body,));
-                }
-                break;
-            case 'GET':
-                if ($params) {
-                    echo json_encode($this->activity_service->search_activity($params['search']));
-                }
+        if($next_route == 'item' || $next_route == 'items' ){
+            $item_routes = new ItemRoutes($this->request_data, $this->middleware);
+            $item_routes->handle_url();
+        }else{
 
-                if ($current_route == 'activity' && $count == 2) {
-                    if (intval($next_route) > 0) {
-                        echo json_encode($this->activity_service->get_activity($next_route));
-                    } else {
-                        throw new NotFoundException();
+            switch ($this->method) {
+                case 'POST':
+                    echo $this->middleware->get_owner_id();
+                    if ($current_route == 'activity' && $count == 1) {
+                        echo json_encode($this->activity_service->add_activity($this->middleware->get_owner_id(), $request_body,));
                     }
-                } else if ($current_route == 'activities') {
-                    echo json_encode($this->activity_service->get_activities($next_route, $this->middleware->get_owner_id()));
-                }else{
+                    break;
+                case 'GET':
+                    if ($params) {
+                        echo json_encode($this->activity_service->search_activity($params['search']));
+                    }
 
-                }
-                break;
-            case 'PUT':
-                if ($current_route == 'activity') {
-                    echo json_encode($this->activity_service->update_activity($request_body));
-                }
-                break;
-            case 'DELETE':
-                if ($current_route == 'activity') {
-                    echo json_encode($this->activity_service->delete_activity($next_route));
-                }
-                break;
-            default:
-                throw new NotFoundException();
-                break;
+                    if ($current_route == 'activity' && $count == 2) {
+                        if (intval($next_route) > 0) {
+                            echo json_encode($this->activity_service->get_activity($next_route));
+                        } else {
+                            throw new NotFoundException();
+                        }
+                    } else if ($current_route == 'activities') {
+                        echo json_encode($this->activity_service->get_activities($next_route, $this->middleware->get_owner_id()));
+                    } else {
+                    }
+                    break;
+                case 'PUT':
+                    if ($current_route == 'activity') {
+                        echo json_encode($this->activity_service->update_activity($request_body));
+                    }
+                    break;
+                case 'DELETE':
+                    if ($current_route == 'activity') {
+                        echo json_encode($this->activity_service->delete_activity($next_route));
+                    }
+                    break;
+                default:
+                    throw new NotFoundException();
+                    break;
+            }
+
         }
     }
 }

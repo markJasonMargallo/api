@@ -1,6 +1,5 @@
 <?php
 require_once('./models/exception/NotFoundException.php');
-require_once('./models/instructor/room/RoomService.php');
 require_once('./models/instructor/room/RoomRoutes.php');
 require_once('./models/exception/AuthorizationException.php');
 require_once('./models/exception/AuthenticationException.php');
@@ -8,7 +7,6 @@ require_once('./models/exception/AuthenticationException.php');
 
 class InstructorRoutes
 {
-    private RoomService $room_service;
     private Request $request_data;
     private Middleware $middleware;
 
