@@ -1,6 +1,7 @@
 <?php
 require_once('./models/instructor/item/ItemService.php');
 require_once('./models/exception/NotFoundException.php');
+require_once('./models/instructor/submission/SubmissionRoutes.php');
 
 class ItemRoutes
 {
@@ -35,13 +36,10 @@ class ItemRoutes
             $next_route = $url[1];
         }
 
-        if($current_route == 'solution' || $current_route == 'solutions'){
+        if($next_route == 'submission' || $next_route == 'submissions'){
 
-            // solution routes here
-
-        }else if($current_route == 'code' || $current_route == 'codes'){
-
-            // code routes here
+            $submission_routes = new SubmissionRoutes($this->request_data, $this->middleware);
+            $submission_routes->handle_url();
 
         }else{
 
