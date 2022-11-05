@@ -56,6 +56,17 @@ class AuthRepository
         return $this->query_handler->handle_query($sql, $values, QueryTypes::ADD_RECORD_GET_ID);
     }
 
+    public function get_instructor($account_email)
+    {
+        $sql = "SELECT S.instructor_id FROM instructors as S
+                JOIN accounts as A ON S.account_id = A.account_id
+                WHERE A.email = ? AND A.role = 'instructor' AND A.is_deleted = 0;";
+
+        $values = [$account_email];
+
+        return $this->query_handler->handle_query($sql, $values, QueryTypes::SELECT_RECORD);
+    }
+
     public function get_account_by_id($id)
     {
         $sql = "SELECT a.account_id AS id , a.email, a.role

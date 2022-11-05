@@ -2,6 +2,7 @@
 require_once('./models/instructor/room/RoomService.php');
 require_once('./models/exception/NotFoundException.php');
 require_once('./models/instructor/activity/ActivityRoutes.php');
+require_once('./models/instructor/student/StudentRoutes.php');
 
 
 
@@ -35,17 +36,20 @@ class RoomRoutes
         $count = count($url);
         $current_route = $url[0];
         $next_route = null;
-        
+
         if ($count > 1) {
             $next_route = $url[1];
         }
 
-        if($current_route == 'activity' || $current_route == 'activities'){
+        if ($next_route == 'activity' || $next_route == 'activities') {
 
             $activity_routes = new ActivityRoutes($this->request_data, $this->middleware);
             $activity_routes->handle_url();
+        } else if ($next_route == 'student' || $next_route == 'students') {
 
-        }else{
+            $student_routes = new StudentRoutes($this->request_data, $this->middleware);
+            $student_routes->handle_url();
+        } else {
 
             switch ($this->method) {
                 case 'POST':
@@ -61,7 +65,7 @@ class RoomRoutes
                     }
 
                     if ($current_route == 'room') {
-                        
+
                         if (intval($next_route) > 0) {
                             echo json_encode($this->room_service->get_room($next_route));
                         } else {
@@ -86,9 +90,6 @@ class RoomRoutes
                     throw new NotFoundException();
                     break;
             }
-            
         }
-
-        
     }
 }

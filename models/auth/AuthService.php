@@ -21,6 +21,11 @@ class AuthService
         $this->validator = new Validation();
     }
 
+    public function get_instructor_id($user_email)
+    {
+        return $this->auth_repository->get_instructor($user_email)['instructor_id'];
+    }
+
     public function register_student($data)
     {
         $student_data = $data->student_data;

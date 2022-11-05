@@ -2,14 +2,14 @@
 
 require_once('./models/instructor/room/RoomRepository.php');
 require_once('./models/instructor/room/RoomTemplate.php');
-require_once('./models/student/InstructorService.php');
+require_once('./models/auth/AuthService.php');
 require_once('./modules/Procedural.php');
 require_once('./modules/Validation.php');
 
 class RoomService implements RoomTemplate
 {
     private RoomRepository $room_repository;
-    private InstructorService $instructor_service;
+    private AuthService $auth_service;
     private Validation $validator;
 
     public function __construct()
@@ -17,13 +17,13 @@ class RoomService implements RoomTemplate
 
         $this->auth_repository = new AuthRepository();
         $this->validator = new Validation();
-        $this->instructor_service = new InstructorService();
+        $this->auth_service = new AuthService();
         $this->room_repository = new RoomRepository();
     }
 
     public function add_room($room_data, $user_email)
     {
-        $instructor_id = $this->instructor_service->get_student_id($user_email);
+        $instructor_id = $this->auth_service->get_instructor_id($user_email);
 
         if ($this->room_repository->add_room($room_data, $instructor_id) > 0) {
             return response(['message' => 'Room created successfully'], 200);
