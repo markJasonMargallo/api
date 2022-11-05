@@ -29,8 +29,16 @@ class AuthRepository
 
     public function add_student($student_data, $account_id)
     {
-        $sql = 'INSERT INTO students (first_name, last_name, middle_name, account_id) VALUES (?, ?, ?, ?)';
-        $values = [$student_data->first_name, $student_data->last_name, $student_data->middle_name, $account_id];
+        $sql = 'INSERT INTO students (first_name, last_name, middle_name, account_id, program, year_level, block) VALUES (?, ?, ?, ?, ?, ?, ?)';
+        $values = [
+            $student_data->first_name, 
+            $student_data->last_name, 
+            $student_data->middle_name, 
+            $account_id, 
+            $student_data->program,
+            $student_data->year_level,
+            $student_data->block
+        ];
 
         return $this->query_handler->handle_query($sql, $values, QueryTypes::ADD_RECORD_GET_ID);
     }
@@ -38,7 +46,12 @@ class AuthRepository
     public function add_instructor($instructor_data, $account_id)
     {
         $sql = 'INSERT INTO instructors (first_name, last_name, middle_name, account_id) VALUES (?, ?, ?, ?)';
-        $values = [$instructor_data->first_name, $instructor_data->last_name, $instructor_data->middle_name, $account_id];
+        $values = [
+            $instructor_data->first_name, 
+            $instructor_data->last_name, 
+            $instructor_data->middle_name, 
+            $account_id
+        ];
 
         return $this->query_handler->handle_query($sql, $values, QueryTypes::ADD_RECORD_GET_ID);
     }
