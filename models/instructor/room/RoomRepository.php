@@ -12,10 +12,10 @@ class RoomRepository implements RoomTemplate
         $this->query_handler = new QueryHandlerModule();
     }
 
-    public function add_room($room_name, $instructor_id)
+    public function add_room($room_data, $instructor_id)
     {
-        $sql = 'INSERT INTO rooms (room_name, instructor_id) VALUES (?, ?);';
-        $values = [$room_name, $instructor_id];
+        $sql = 'INSERT INTO rooms (room_name, instructor_id, year_level, program, block) VALUES (?, ?, ?, ?, ?);';
+        $values = [$room_data-> room_name, $instructor_id, $room_data->year_level,$room_data->program, $room_data->block];
 
         return $this->query_handler->handle_query($sql, $values, QueryTypes::ADD_RECORD_GET_ID);
     }

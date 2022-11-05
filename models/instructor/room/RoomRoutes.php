@@ -17,11 +17,10 @@ class RoomRoutes
         $this->middleware = $middleware;
 
 
-        $trimmed_url = str_replace('room/', '', $this->request_data->get_request_url());
-        $this->request_data->set_url($trimmed_url);
-
         $this->url = explode('/', $this->request_data->get_request_url());
 
+        $trimmed_url = str_replace('room/', '', $this->request_data->get_request_url());
+        $this->request_data->set_url($trimmed_url);
 
         $this->method = $this->request_data->get_request_method();
         $this->room_service = new RoomService();
@@ -50,22 +49,26 @@ class RoomRoutes
 
             switch ($this->method) {
                 case 'POST':
-                    if ($current_route == 'room' && $count == 0) {
+                    if ($current_route == 'room') {
                         echo json_encode($this->room_service->add_room($request_body, $this->middleware->get_owner_email()));
                     }
                     break;
                 case 'GET':
+                    echo $current_route;
+
                     if ($params) {
                         echo json_encode($this->room_service->search_rooms($params['search']));
                     }
 
-                    if ($current_route == 'room' && $count == 2) {
+                    if ($current_route == 'room') {
+                        
                         if (intval($next_route) > 0) {
                             echo json_encode($this->room_service->get_room($next_route));
                         } else {
                             throw new NotFoundException();
                         }
                     } else if ($current_route == 'rooms') {
+                        // echo $current_route;
                         echo json_encode($this->room_service->get_rooms($this->middleware->get_owner_id()));
                     }
                     break;

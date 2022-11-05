@@ -23,16 +23,18 @@ class RoomService implements RoomTemplate
 
     public function add_room($room_data, $user_email)
     {
-        if ($this->validator->is_body_valid($room_data, './schemas/room_schema.json')) {
+        $instructor_id = $this->instructor_service->get_student_id($user_email);
 
-            $student_id = $this->instructor_service->get_student_id($user_email);
-
-            if ($this->room_repository->add_room($room_data->room_name, $student_id) > 0) {
-                return response(['message' => 'Room created successfully'], 200);
-            }
-        } else {
-            return $this->validator->invalid_body();
+        if ($this->room_repository->add_room($room_data, $instructor_id) > 0) {
+            return response(['message' => 'Room created successfully'], 200);
         }
+
+        // if ($this->validator->is_body_valid($room_data, './schemas/room_schema.json')) {
+
+           
+        // } else {
+        //     return $this->validator->invalid_body();
+        // }
     }
 
     public function get_room($id)
