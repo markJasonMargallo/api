@@ -1,6 +1,6 @@
 <?php
 require_once('./modules/QueryHandlerModule.php');
-require_once('./models/instructor/submission/SubmissionTemplate.php');
+require_once('./models/user_routes/submission/SubmissionTemplate.php');
 
 class SubmissionRepository implements SubmissionTemplate
 {

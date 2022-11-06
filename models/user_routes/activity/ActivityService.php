@@ -1,6 +1,6 @@
 <?php
-require_once('./models/instructor/activity/ActivityRepository.php');
-require_once('./models/instructor/activity/ActivityTemplate.php');
+require_once('./models/user_routes/activity/ActivityRepository.php');
+require_once('./models/user_routes/activity/ActivityTemplate.php');
 require_once('./modules/Procedural.php');
 require_once('./modules/Validation.php');
 

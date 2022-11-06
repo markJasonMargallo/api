@@ -1,7 +1,7 @@
 <?php
-require_once('./models/instructor/item/ItemService.php');
+require_once('./models/user_routes/item/ItemService.php');
 require_once('./models/exception/NotFoundException.php');
-require_once('./models/instructor/submission/SubmissionRoutes.php');
+require_once('./models/user_routes/submission/SubmissionRoutes.php');
 
 class ItemRoutes
 {

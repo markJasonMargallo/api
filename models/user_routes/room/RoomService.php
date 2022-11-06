@@ -1,7 +1,7 @@
 <?php
 
-require_once('./models/instructor/room/RoomRepository.php');
-require_once('./models/instructor/room/RoomTemplate.php');
+require_once('./models/user_routes/room/RoomRepository.php');
+require_once('./models/user_routes/room/RoomTemplate.php');
 require_once('./models/auth/AuthService.php');
 require_once('./modules/Procedural.php');
 require_once('./modules/Validation.php');
@@ -47,9 +47,9 @@ class RoomService implements RoomTemplate
         return response($this->room_repository->search_rooms($search_string), 200);
     }
 
-    public function get_rooms($instructor_id)
+    public function get_instructor_rooms($instructor_id)
     {
-        return response($this->room_repository->get_rooms($instructor_id), 200);
+        return response($this->room_repository->get_instructor_rooms($instructor_id), 200);
     }
 
     public function update_room($room_data)
@@ -69,5 +69,9 @@ class RoomService implements RoomTemplate
         } else {
             return response(["message" => "Resource not found."], 404);
         }
+    }
+
+    public function get_student_rooms($room_data){
+        return response($this->room_repository->get_student_rooms($room_data), 200);
     }
 }

@@ -1,6 +1,6 @@
 <?php
 require_once('./modules/QueryHandlerModule.php');
-require_once('./models/instructor/activity/ActivityTemplate.php');
+require_once('./models/user_routes/activity/ActivityTemplate.php');
 
 class ActivityRepository implements ActivityTemplate
 {

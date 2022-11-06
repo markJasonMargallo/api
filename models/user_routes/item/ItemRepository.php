@@ -1,6 +1,6 @@
 <?php
 require_once('./modules/QueryHandlerModule.php');
-require_once('./models/instructor/item/ItemTemplate.php');
+require_once('./models/user_routes/item/ItemTemplate.php');
 
 class ItemRepository implements ItemTemplate
 {

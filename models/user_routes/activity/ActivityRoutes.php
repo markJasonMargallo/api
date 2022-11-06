@@ -1,7 +1,7 @@
 <?php
-require_once('./models/instructor/activity/ActivityService.php');
+require_once('./models/user_routes/activity/ActivityService.php');
 require_once('./models/exception/NotFoundException.php');
-require_once('./models/instructor/item/ItemRoutes.php');
+require_once('./models/user_routes/item/ItemRoutes.php');
 
 class ActivityRoutes
 {

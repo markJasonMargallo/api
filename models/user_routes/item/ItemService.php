@@ -1,7 +1,7 @@
 <?php
 
-require_once('./models/instructor/item/ItemRepository.php');
-require_once('./models/instructor/item/ItemTemplate.php');
+require_once('./models/user_routes/item/ItemRepository.php');
+require_once('./models/user_routes/item/ItemTemplate.php');
 require_once('./modules/Procedural.php');
 require_once('./modules/Validation.php');
 

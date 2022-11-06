@@ -37,11 +37,6 @@ class Middleware
         return $this->token->get_payload()->role == 'student';
     }
 
-    public function get_id_from_token()
-    {
-        return $this->token->get_payload()->id;
-    }
-
     public function get_owner_email()
     {
         return $this->token->get_owner_email();

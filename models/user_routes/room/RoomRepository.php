@@ -1,6 +1,6 @@
 <?php
 require_once('./modules/QueryHandlerModule.php');
-require_once('./models/instructor/room/RoomTemplate.php');
+require_once('./models/user_routes/room/RoomTemplate.php');
 
 class RoomRepository implements RoomTemplate
 {
@@ -37,7 +37,7 @@ class RoomRepository implements RoomTemplate
 
     }
 
-    public function get_rooms($instructor_id)
+    public function get_instructor_rooms($instructor_id)
     {
         $sql = "SELECT * FROM rooms WHERE is_deleted = 0 AND instructor_id = ?;";
         $values = [$instructor_id];
@@ -62,4 +62,13 @@ class RoomRepository implements RoomTemplate
 
         return $this->query_handler->handle_query($sql, $values, QueryTypes::UPDATE_RECORD);
     }
+
+    public function get_student_rooms($room_data)
+    {
+        $sql = "SELECT * FROM rooms WHERE is_deleted = 0 AND program = ? AND year_level = ? AND block = ?;";
+        $values = [$room_data->program, $room_data->year_level, $room_data->block];
+
+        return $this->query_handler->handle_query($sql, $values, QueryTypes::SELECT_MULTIPLE_RECORDS);
+    }
+
 }

@@ -1,11 +1,10 @@
 <?php
-require_once('./models/instructor/student/StudentService.php');
+require_once('./models/user_routes/submission/SubmissionService.php');
 require_once('./models/exception/NotFoundException.php');
-require_once('./models/instructor/submission/SubmissionRoutes.php');
 
-class StudentRoutes
+class SubmissionRoutes
 {
-    private StudentService $student_service;
+    private SubmissionService $submission_service;
     private Request $request_data;
     private Middleware $middleware;
 
@@ -20,7 +19,7 @@ class StudentRoutes
         $this->request_data->set_url($trimmed_url);
 
         $this->method = $this->request_data->get_request_method();
-        $this->student_service = new StudentService();
+        $this->submission_service = new SubmissionService();
     }
 
     public function handle_url()
@@ -37,24 +36,22 @@ class StudentRoutes
         }
 
         switch ($this->method) {
-            case 'POST':
-                if ($current_route == 'students' && $count == 1) {
-                    echo json_encode($this->student_service->get_students($request_body));
-                }
-                break;
             case 'GET':
-                if ($current_route == 'student' && $count == 2) {
+                if ($current_route == 'submission' && $count == 2) {
                     if (intval($next_route) > 0) {
-                        echo json_encode($this->student_service->get_student($next_route));
+                        echo json_encode($this->submission_service->get_submission($next_route));
                     } else {
                         throw new NotFoundException();
                     }
-                } 
+                } else if ($current_route == 'submissions' && $count == 2) {
+                    echo json_encode($this->submission_service->get_submissions($next_route));
+                }
                 break;
             default:
                 throw new NotFoundException();
                 break;
         }
+
         
     }
 }

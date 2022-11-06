@@ -1,6 +1,6 @@
 <?php
 require_once('./modules/QueryHandlerModule.php');
-require_once('./models/instructor/student/StudentTemplate.php');
+require_once('./models/user_routes/student/StudentTemplate.php');
 
 class StudentRepository implements StudentTemplate
 {

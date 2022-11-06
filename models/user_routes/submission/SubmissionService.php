@@ -1,7 +1,7 @@
 <?php
 
-require_once('./models/instructor/submission/SubmissionRepository.php');
-require_once('./models/instructor/submission/SubmissionTemplate.php');
+require_once('./models/user_routes/submission/SubmissionRepository.php');
+require_once('./models/user_routes/submission/SubmissionTemplate.php');
 require_once('./modules/Procedural.php');
 require_once('./modules/Validation.php');
 

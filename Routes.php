@@ -3,7 +3,7 @@ require_once('./config/Config.php');
 require_once('./models/compiler/CompileRoutes.php');
 require_once('./models/auth/AuthRoutes.php');
 require_once('./models/Request.php');
-require_once('./models/instructor/InstructorRoutes.php');
+require_once('./models/user_routes/UserRoutes.php');
 
 
 // error_reporting(E_ALL ^ E_WARNING ^ E_DEPRECATED);
@@ -34,7 +34,10 @@ class Route
                 $auth_routes = new AuthRoutes($request_data);
                 $auth_routes->handle_url();
             } else if (str_starts_with($request_url, 'instructor')) {
-                $instructor_routes = new InstructorRoutes($request_data);
+                $instructor_routes = new UserRoutes($request_data, "instructor");
+                $instructor_routes->handle_url();
+            }else if (str_starts_with($request_url, 'student')) {
+                $instructor_routes = new UserRoutes($request_data, "student");
                 $instructor_routes->handle_url();
             } else {
                 http_response_code(404);

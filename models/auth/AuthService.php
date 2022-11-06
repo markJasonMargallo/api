@@ -148,10 +148,6 @@ class AuthService
             $refresh_token = $this->auth_module->generate_refresh_token($user['id']);
             $access_token = $this->auth_module->generate_access_token($user['email'], $user['id'], $user_role);
 
-            // //set http-only cookie
-            // $cookie_module = new CookieModule($refresh_token);
-            // $cookie_module->set_cookie();
-
             //set Authorization header
             header('Authorization: ' . $access_token);
             http_response_code(200);

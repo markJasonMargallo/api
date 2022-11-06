@@ -1,7 +1,7 @@
 <?php
 
-require_once('./models/instructor/student/StudentRepository.php');
-require_once('./models/instructor/student/StudentTemplate.php');
+require_once('./models/user_routes/student/StudentRepository.php');
+require_once('./models/user_routes/student/StudentTemplate.php');
 require_once('./modules/Procedural.php');
 require_once('./modules/Validation.php');
 
