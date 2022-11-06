@@ -42,7 +42,7 @@ class ItemRoutes
 
         if($next_route == 'submission' || $next_route == 'submissions'){
 
-            $submission_routes = new SubmissionRoutes($this->request_data, $this->middleware);
+            $submission_routes = new SubmissionRoutes($this->request_data, $this->middleware, $this->parent_route);
             $submission_routes->handle_url();
 
         }else{

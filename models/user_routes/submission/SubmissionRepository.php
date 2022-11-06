@@ -29,4 +29,22 @@ class SubmissionRepository implements SubmissionTemplate
         return $this->query_handler->handle_query($sql, $values, QueryTypes::SELECT_MULTIPLE_RECORDS);
     }
 
+    public function add_submission($submission_data, $student_id)
+    {
+        $sql = 'INSERT INTO submissions (code, item_id, student_id) VALUES (?, ?, ?);';
+        $values = [$submission_data->code, $submission_data->item_id, $student_id];
+
+        return $this->query_handler->handle_query($sql, $values, QueryTypes::ADD_RECORD);
+    }
+
+    public function update_student_submission($submission_data, $student_id)
+    {
+        $sql = "UPDATE submissions SET code = ?
+                WHERE submission_id = ? AND student_id = ?;";
+        $values = [$submission_data->code, $submission_data->submission_id, $student_id];
+
+        return $this->query_handler->handle_query($sql, $values, QueryTypes::UPDATE_RECORD);
+
+    }
+
 }
