@@ -2,6 +2,7 @@
 require_once('./models/user_routes/item/ItemService.php');
 require_once('./models/exception/NotFoundException.php');
 require_once('./models/user_routes/submission/SubmissionRoutes.php');
+require_once('./models/user_routes/code/CodeRoutes.php');
 
 class ItemRoutes
 {
@@ -44,6 +45,11 @@ class ItemRoutes
 
             $submission_routes = new SubmissionRoutes($this->request_data, $this->middleware, $this->parent_route);
             $submission_routes->handle_url();
+
+        }else if($next_route == 'code' || $next_route == 'codes'){
+
+            $code_routes = new CodeRoutes($this->request_data, $this->middleware, $this->parent_route);
+            $code_routes->handle_url();
 
         }else{
 
