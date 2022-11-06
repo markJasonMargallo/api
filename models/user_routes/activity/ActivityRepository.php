@@ -79,4 +79,23 @@ class ActivityRepository implements ActivityTemplate
 
         return $this->query_handler->handle_query($sql, $values, QueryTypes::UPDATE_RECORD);
     }
+
+    public function get_activities_by_block($student_data){
+
+        $sql = "SELECT * FROM activities AS A JOIN rooms AS R ON A.room_id = R.room_id
+                WHERE A.is_deleted = 0 AND  R.is_deleted = 0 AND R.program = ? AND R.year_level = ? AND R.block = ?";
+        $values = [$student_data->program, $student_data->year_level, $student_data->block];
+
+        return $this->query_handler->handle_query($sql, $values, QueryTypes::SELECT_MULTIPLE_RECORDS);
+    }
+
+    public function get_activities_by_room($room_id){
+        $sql = "SELECT * FROM activities AS A JOIN rooms AS R ON A.room_id = R.room_id
+                WHERE A.is_deleted = 0 AND  R.is_deleted = 0 AND R.room_id = ?";
+        $values = [$room_id];
+
+        return $this->query_handler->handle_query($sql, $values, QueryTypes::SELECT_MULTIPLE_RECORDS);
+    }
+
+
 }

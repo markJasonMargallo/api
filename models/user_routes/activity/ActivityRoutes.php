@@ -84,7 +84,31 @@ class ActivityRoutes
                 }
 
             } else if($parent_route == 'student') {
-                echo 'student activity';
+                switch ($this->method) {
+                    case 'POST':
+                        echo $this->middleware->get_owner_id();
+                        if ($current_route == 'activities' && $count == 1) {
+                            echo json_encode($this->activity_service->get_activities_by_block($request_body,));
+                        }
+                        break;
+                    case 'GET':
+                        if ($params) {
+                            echo json_encode($this->activity_service->search_activity($params['search']));
+                        }
+
+                        if ($current_route == 'activity' && $count == 2) {
+                            if (intval($next_route) > 0) {
+                                echo json_encode($this->activity_service->get_activity($next_route));
+                            } else {
+                                throw new NotFoundException();
+                            }
+                        } else if ($current_route == 'activities' && $count == 2) {
+                            echo json_encode($this->activity_service->get_activities_by_room($next_route));
+                        }
+                        break;
+                    default:
+                        throw new NotFoundException();
+                }
             }
 
         }

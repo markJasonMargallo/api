@@ -46,12 +46,21 @@ class ActivityService implements ActivityTemplate
         }
     }
 
-    public function delete_activity($room_id)
+    public function delete_activity($activity_id)
     {
-        if ($this->activity_repository->delete_activity($room_id)) {
+        if ($this->activity_repository->delete_activity($activity_id)) {
             return response(['message' => 'Activity deleted.'], 200);
         } else {
             return response(['message' => 'Resource not found.'], 400);
         }
     }
-}
+
+    public function get_activities_by_block($student_data){
+        return response($this->activity_repository->get_activities_by_block($student_data), 200);
+    }
+
+    public function get_activities_by_room($room_id){
+        return response($this->activity_repository->get_activities_by_room($room_id), 200);
+    }
+
+    }

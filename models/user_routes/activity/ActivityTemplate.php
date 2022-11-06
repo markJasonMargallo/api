@@ -11,5 +11,10 @@ interface ActivityTemplate
 
     public function update_activity($activity_data);
 
-    public function delete_activity($room_id);
+    public function delete_activity($activity_id);
+
+    public function get_activities_by_block($student_data);
+
+    public function get_activities_by_room($room_id);
+
 }
