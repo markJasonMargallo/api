@@ -42,7 +42,7 @@ class ActivityRoutes
         }
 
         if($next_route == 'item' || $next_route == 'items' ){
-            $item_routes = new ItemRoutes($this->request_data, $this->middleware);
+            $item_routes = new ItemRoutes($this->request_data, $this->middleware, $this->parent_route);
             $item_routes->handle_url();
         }else{
             if ($parent_route == 'instructor') {
