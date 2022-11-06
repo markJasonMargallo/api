@@ -50,7 +50,7 @@ class RoomRoutes
 
         if ($next_route == 'activity' || $next_route == 'activities') {
 
-            $activity_routes = new ActivityRoutes($this->request_data, $this->middleware);
+            $activity_routes = new ActivityRoutes($this->request_data, $this->middleware, $this->parent_route);
             $activity_routes->handle_url();
 
         } else if ($next_route == 'student' || $next_route == 'students') {
@@ -69,7 +69,6 @@ class RoomRoutes
                         }
                         break;
                     case 'GET':
-                        echo $current_route;
 
                         if ($params) {
                             echo json_encode($this->room_service->search_rooms($params['search']));
@@ -108,6 +107,22 @@ class RoomRoutes
                     case 'POST':
                         if ($current_route == 'rooms') {
                             echo json_encode($this->room_service->get_student_rooms($request_body));
+                        }
+                        break;
+
+                    case 'GET':
+
+                        if ($params) {
+                            echo json_encode($this->room_service->search_rooms($params['search']));
+                        }
+
+                        if ($current_route == 'room') {
+
+                            if (intval($next_route) > 0) {
+                                echo json_encode($this->room_service->get_room($next_route));
+                            } else {
+                                throw new NotFoundException();
+                            }
                         }
                         break;
                     default:
