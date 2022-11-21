@@ -4,9 +4,9 @@ class AuthenticationException extends Exception
 {
     public int $statusCode;
 
-    public function __construct(string $message = 'Authorization required.')
+    public function __construct(string $message = 'Forbidden.')
     {
         $this->message = $message;
-        $this->statusCode = 401;
+        $this->statusCode = 403;
     }
 }

@@ -27,11 +27,11 @@ class UserRoutes
 
             if($parent_route == 'instructor'){
                 if (!$this->middleware->is_instructor()) {
-                    throw new AuthorizationException();
+                    throw new AuthenticationException();
                 }
             }else if($parent_route == 'student'){
                 if (!$this->middleware->is_student()) {
-                    throw new AuthorizationException();
+                    throw new AuthenticationException();
                 }
             }
 

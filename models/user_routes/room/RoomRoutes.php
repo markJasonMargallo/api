@@ -57,6 +57,7 @@ class RoomRoutes
 
             $student_routes = new StudentRoutes($this->request_data, $this->middleware);
             $student_routes->handle_url();
+
         } else {
 
             if ($parent_route == 'instructor') {

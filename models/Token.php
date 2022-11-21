@@ -89,14 +89,14 @@ class Token
                 // check if access token payload is valid
                 if (!$this->validator->is_body_valid($this->get_payload(), './schemas/access_token_payload_schema.json')) {
                     // $this->validator->invalid_body();
-                    throw new AuthorizationException();
+                    throw new AuthenticationException();
                 }
             } elseif ($extracted_token_type == TokenTypes::REFRESH) {
 
                 // check if refresh token payload is valid
                 if (!$this->validator->is_body_valid($this->get_payload(), './schemas/refresh_token_payload_schema.json')) {
                     // $this->validator->invalid_body();
-                    throw new AuthorizationException();
+                    throw new AuthenticationException();
                 }
             }
 
