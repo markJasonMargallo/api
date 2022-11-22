@@ -3,14 +3,20 @@ require_once('./models/user_routes/activity/ActivityRepository.php');
 require_once('./models/user_routes/activity/ActivityTemplate.php');
 require_once('./modules/Procedural.php');
 require_once('./modules/Validation.php');
+require_once('./models/user_routes/room/RoomRepository.php');
+require_once('./models/user_routes/item/ItemRepository.php');
 
 class ActivityService implements ActivityTemplate
 {
+    private ItemRepository $item_repository;
+    private RoomRepository $room_repository;
     private ActivityRepository $activity_repository;
     private Validation $validator;
 
     public function __construct()
     {
+        $this->item_repository = new ItemRepository();
+        $this->room_repository = new RoomRepository();
         $this->activity_repository = new ActivityRepository();
         $this->validator = new Validation();
     }
@@ -63,4 +69,33 @@ class ActivityService implements ActivityTemplate
         return response($this->activity_repository->get_activities_by_room($room_id), 200);
     }
 
+
+    public function get_activities_by_instructor($instructor_id)
+    {
+        $result = array();
+        $rooms = $this->room_repository->get_instructor_rooms($instructor_id);
+
+        //get activities per room
+        foreach ($rooms as $room) {
+
+            $activities = $this->activity_repository->get_activities_by_room($room['room_id']);
+
+            if ($activities) {
+
+                foreach ($activities as $key => $activity) {
+                    $items = $this->item_repository->get_items($activity['activity_id']);
+
+                    if($items){
+                        $acts[$key]['items'] = $items;
+                    }
+                    
+                }
+
+                array_push($result, ['room_name' => $room['room_name'], 'activities' => $activities]);
+            }
+        }
+
+        return response($result, 200);
     }
+
+}

@@ -51,7 +51,7 @@ class ActivityRoutes
                     case 'POST':
                         echo $this->middleware->get_owner_id();
                         if ($current_route == 'activity' && $count == 1) {
-                            echo json_encode($this->activity_service->add_activity($this->middleware->get_owner_id(), $request_body,));
+                            echo json_encode($this->activity_service->add_activity($this->middleware->get_owner_id(), $request_body));
                         }
                         break;
                     case 'GET':
@@ -66,7 +66,8 @@ class ActivityRoutes
                                 throw new NotFoundException();
                             }
                         } else if ($current_route == 'activities') {
-                            echo json_encode($this->activity_service->get_activities($next_route, $this->middleware->get_owner_id()));
+                            echo json_encode($this->activity_service->get_activities_by_instructor($this->middleware->get_owner_id()));
+                            // echo json_encode($this->activity_service->get_activities($next_route, $this->middleware->get_owner_id()));
                         }
                         break;
                     case 'PUT':

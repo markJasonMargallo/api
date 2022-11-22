@@ -21,7 +21,7 @@ class ActivityRepository implements ActivityTemplate
         $values = [
             $activity_data->activity_name,
             $activity_data->activity_description,
-            $room_id,
+            $activity_data->room_id,
             $activity_data->deadline,
             $activity_data->language_specified,
         ];
