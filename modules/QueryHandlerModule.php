@@ -25,50 +25,52 @@ class QueryHandlerModule
         $output = null;
         $query = null;
 
-        try {
-            
+        $sql = $this->pdo->prepare($sql);
 
-            $sql = $this->pdo->prepare($sql);
-
-            if ($query_type == QueryTypes::SEARCH_RECORDS) {
-                $sql->bindParam(1, $values[0]);
-                $sql->execute();
-            }else{
-                $sql->execute($values);
-            }
-            
-
-            switch ($query_type) {
-                case QueryTypes::FIND_RECORD_EXISTENCE:
-                    $res = $sql->fetch();
-                    $output = ($res) ? true : false;
-                    break;
-                case QueryTypes::SELECT_RECORD:
-                    $users = $sql->fetch();
-                    $output = ($users) ? $users : null;
-                    break;
-                case QueryTypes::SELECT_MULTIPLE_RECORDS:
-                    $res = $sql->fetchAll();
-                    $output = ($res) ? $res : null;
-                    break;
-                case QueryTypes::SEARCH_RECORDS:
-                    $res = $sql->fetchAll();
-                    $output = ($res) ? $res : null;
-                    break;
-                case QueryTypes::ADD_RECORD_GET_ID:
-                    $output = $this->pdo->lastInsertId();
-                    break;
-                case QueryTypes::ADD_RECORD:
-                    $output = ($this->pdo->lastInsertId() > 0) ? true : false;
-                    break;
-                case QueryTypes::UPDATE_RECORD:
-                    $output = ($sql->rowCount() > 0) ? true : false;
-                    break;
-            }
-
-        } catch (\PDOException $e) {
-            return response(['message' => $e->getMessage()], 400);
+        if ($query_type == QueryTypes::SEARCH_RECORDS) {
+            $sql->bindParam(1, $values[0]);
+            $sql->execute();
+        } else {
+            $sql->execute($values);
         }
+
+
+        switch ($query_type) {
+            case QueryTypes::FIND_RECORD_EXISTENCE:
+                $res = $sql->fetch();
+                $output = ($res) ? true : false;
+                break;
+            case QueryTypes::SELECT_RECORD:
+                $users = $sql->fetch();
+                $output = ($users) ? $users : null;
+                break;
+            case QueryTypes::SELECT_MULTIPLE_RECORDS:
+                $res = $sql->fetchAll();
+                $output = ($res) ? $res : null;
+                break;
+            case QueryTypes::SEARCH_RECORDS:
+                $res = $sql->fetchAll();
+                $output = ($res) ? $res : null;
+                break;
+            case QueryTypes::ADD_RECORD_GET_ID:
+                $output = $this->pdo->lastInsertId();
+                break;
+            case QueryTypes::ADD_RECORD:
+                $output = ($this->pdo->lastInsertId() > 0) ? true : false;
+                break;
+            case QueryTypes::UPDATE_RECORD:
+                $output = ($sql->rowCount() > 0) ? true : false;
+                break;
+        }
+
+        // try {
+            
+            
+
+        // } catch (\PDOException $e) {
+        //     return response(['message' => $e->getMessage()], 400);
+        // }
+
         return $output;
     }
 }

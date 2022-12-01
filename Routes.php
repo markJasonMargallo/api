@@ -55,6 +55,9 @@ class Route
         } catch (NotFoundException $exception) {
             echo json_encode(response(['message' => $exception->getMessage()], $exception->statusCode));
             return;
+        } catch (\PDOException $e) {
+            echo json_encode(response(['message' => $e->getMessage()], 400));
+            return;
         }
     }
 }
