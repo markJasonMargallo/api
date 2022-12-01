@@ -3,9 +3,11 @@ require_once('./models/user_routes/item/ItemService.php');
 require_once('./models/exception/NotFoundException.php');
 require_once('./models/user_routes/submission/SubmissionRoutes.php');
 require_once('./models/user_routes/code/CodeRoutes.php');
+require_once('./models/user_routes/solution/SolutionRoutes.php');
 
 class ItemRoutes
 {
+    private SolutionRoutes $solution_routes;
     private ItemService $item_service;
     private Request $request_data;
     private Middleware $middleware;
@@ -51,6 +53,11 @@ class ItemRoutes
             $code_routes = new CodeRoutes($this->request_data, $this->middleware, $this->parent_route);
             $code_routes->handle_url();
 
+        } else if ($next_route == 'solution' || $next_route == 'solutions') {
+
+            $solution_routes = new SolutionRoutes($this->request_data, $this->middleware, $this->parent_route);
+            $solution_routes->handle_url();
+            
         }else{
 
             if ($parent_route == 'instructor') {
