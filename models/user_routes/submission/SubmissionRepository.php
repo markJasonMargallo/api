@@ -12,6 +12,14 @@ class SubmissionRepository implements SubmissionTemplate
         $this->query_handler = new QueryHandlerModule();
     }
 
+    public function find_submission($student_id, $item_id)
+    {
+        $sql = "SELECT * FROM submissions WHERE student_id = ? AND item_id = ? ;";
+        $values = [$student_id, $item_id];
+
+        return $this->query_handler->handle_query($sql, $values, QueryTypes::SELECT_RECORD);
+    }
+
     public function get_submission($submission_id)
     {
         $sql = "SELECT * FROM submissions WHERE submission_id = ?;";
@@ -31,20 +39,19 @@ class SubmissionRepository implements SubmissionTemplate
 
     public function add_submission($submission_data, $student_id)
     {
-        $sql = 'INSERT INTO submissions (code, item_id, student_id) VALUES (?, ?, ?);';
-        $values = [$submission_data->code, $submission_data->item_id, $student_id];
+        $sql = 'INSERT INTO submissions (code, item_id, student_id, score, test_result) VALUES (?, ?, ?, ?, ?);';
+        $values = [$submission_data->code, $submission_data->item_id, $student_id, $submission_data->score, $submission_data->test_result];
 
         return $this->query_handler->handle_query($sql, $values, QueryTypes::ADD_RECORD);
     }
 
     public function update_student_submission($submission_data, $student_id)
     {
-        $sql = "UPDATE submissions SET code = ?
-                WHERE submission_id = ? AND student_id = ?;";
-        $values = [$submission_data->code, $submission_data->submission_id, $student_id];
+        $sql = "UPDATE submissions SET code = ?, score = ?, test_result = ?
+                WHERE item_id = ? AND student_id = ?;";
+        $values = [$submission_data->code, $submission_data->score, $submission_data->test_result, $submission_data->item_id, $student_id];
 
         return $this->query_handler->handle_query($sql, $values, QueryTypes::UPDATE_RECORD);
-
     }
 
 }

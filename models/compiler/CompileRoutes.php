@@ -2,10 +2,13 @@
 require_once('./models/middleware/Middleware.php');
 require_once('./models/compiler/ExecutionService.php');
 require_once('./models/compiler/CodeTestingService.php');
+require_once('./models/compiler/CodeSubmissionService.php');
+
 
 class CompileRoutes
 {
 
+    private CodeSubmissionService $code_submission_service;
     private CodeTestingService $code_testing_service;
     private Request $request_data;
     private Middleware $middleware;
@@ -15,6 +18,7 @@ class CompileRoutes
 
     public function __construct(Request $request_data)
     {
+
         $this->request_data = $request_data;
 
         if ($this->request_data->is_header_provided()) {
@@ -35,7 +39,7 @@ class CompileRoutes
     public function handle_url()
     {
         $parent_route = $this->parent_route;
-        $request_body = json_decode(file_get_contents('php://input'));
+        $request_body = $this->request_data->get_request_body();
         $url = $this->url;
         $count = count($url);
         $current_route = $url[1];
@@ -56,8 +60,8 @@ class CompileRoutes
                     $this->code_testing_service->run_tests();
                 }
                 if ($current_route == "submit") {
-                    $this->code_testing_service = new CodeTestingService($method, $request_body);
-                    $this->code_testing_service->run_tests();
+                    $this->code_submission_service = new CodeSubmissionService($method, $request_body, $this->middleware);
+                    $this->code_submission_service->run_tests();
                 }
                 break;
             default:
