@@ -4,14 +4,16 @@ require_once("./models/user_routes/test/TestRepository.php");
 
 class CodeTestingService
 {
+    private Middleware $middleware;
     private TestRepository $test_repository;
     private int $item_id;
     private $execution_data;
     private $testing_conditions = array();
     private string $method;
 
-    public function __construct($method, $request_body)
+    public function __construct($method, $request_body, Middleware $middleware)
     {
+        $this->middleware = $middleware;
         $this->method = $method;
         $this->test_repository = new TestRepository();
         $this->item_id = $request_body->item_id;
@@ -22,6 +24,7 @@ class CodeTestingService
 
     public function run_tests()
     {
+        $is_instructor = $this->middleware->is_instructor()? true: false;
         $results = array();
         $score = 0;
         $total_score = 0;
@@ -50,7 +53,7 @@ class CodeTestingService
 
             $total_score += $condition['points'];
 
-            if ($condition['is_visible'] > 0) {
+            if ($condition['is_visible'] > 0 || $is_instructor) {
                 $rest = array(
                     "input" => $condition['input'],
                     "output" => $output->output,

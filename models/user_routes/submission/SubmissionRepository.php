@@ -53,5 +53,4 @@ class SubmissionRepository implements SubmissionTemplate
 
         return $this->query_handler->handle_query($sql, $values, QueryTypes::UPDATE_RECORD);
     }
-
 }

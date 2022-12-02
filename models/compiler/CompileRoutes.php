@@ -56,7 +56,7 @@ class CompileRoutes
                     echo $result;
                 }
                 if ($current_route == "test") {
-                    $this->code_testing_service = new CodeTestingService($method, $request_body);
+                    $this->code_testing_service = new CodeTestingService($method,$request_body, $this->middleware);
                     $this->code_testing_service->run_tests();
                 }
                 if ($current_route == "submit") {
