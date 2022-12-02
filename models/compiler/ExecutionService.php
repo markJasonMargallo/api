@@ -20,13 +20,7 @@ class ExecutionService
         $this->context = stream_context_create($this->options);
     }
 
-    public function http_request(){
+    public function run_code(){
         return file_get_contents($this->url, false, $this->context);
-
-        // if($result){
-        //     return true;
-        // }
-
-        // var_dump($result);
     }
 }

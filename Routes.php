@@ -27,7 +27,7 @@ class Route
                 return;
             }
 
-            if (str_starts_with($request_url, 'compile')) {
+            if (str_starts_with($request_url, 'run')) {
                 $compile_routes = new CompileRoutes($request_data);
                 $compile_routes->handle_url();
             } else if (str_starts_with($request_url, 'auth')) {

@@ -32,7 +32,7 @@ class TestRepository implements TestTemplate
 
     public function get_tests($item_id)
     {
-        $sql = "SELECT * FROM tests WHERE item_id = ?;";
+        $sql = "SELECT * FROM tests WHERE item_id = ? ORDER BY is_visible DESC;";
         $values = [$item_id];
 
         return $this->query_handler->handle_query($sql, $values, QueryTypes::SELECT_MULTIPLE_RECORDS);
