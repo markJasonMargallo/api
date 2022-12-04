@@ -33,9 +33,11 @@ class CodeSubmissionService
         $results = array();
         $score = 0;
         $total_score = 0;
+        $test_id = 0;
 
         foreach ($this->testing_conditions as $condition) {
 
+            $test_id += 1;
             $points = $condition['points'];
 
             $modified_body = array(
@@ -62,6 +64,8 @@ class CodeSubmissionService
 
             if ($condition['is_visible'] > 0) {
                 $rest = array(
+                    "hidden" => false,
+                    "id" => $test_id,
                     "input" => $condition['input'],
                     "output" => $output->output,
                     "expected_output" => $condition['output'],
@@ -69,9 +73,9 @@ class CodeSubmissionService
                 );
             } else {
                 $rest = array(
-                    "input" => "hidden",
+                    "hidden" => true,
+                    "id" => $test_id,
                     "output" => $output->output,
-                    "expected_output" => "hidden",
                     "status" => $test_status,
                 );
             }

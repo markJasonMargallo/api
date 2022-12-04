@@ -28,8 +28,11 @@ class CodeTestingService
         $results = array();
         $score = 0;
         $total_score = 0;
+        $test_id = 0;
 
         foreach ($this->testing_conditions as $condition) {
+
+            $test_id+=1;
 
             $modified_body = array(
                 "code" => $this->execution_data->code,
@@ -55,6 +58,8 @@ class CodeTestingService
 
             if ($condition['is_visible'] > 0 || $is_instructor) {
                 $rest = array(
+                    "hidden" => false,
+                    "id" => $test_id,
                     "input" => $condition['input'],
                     "output" => $output->output,
                     "expected_output" => $condition['output'],
@@ -62,6 +67,8 @@ class CodeTestingService
                 );
             } else {
                 $rest = array(
+                    "hidden" => true,
+                    "id" => $test_id,
                     "input" => "hidden",
                     "output" => $output->output,
                     "expected_output" => "hidden",
