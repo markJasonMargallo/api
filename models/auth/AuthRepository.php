@@ -11,6 +11,24 @@ class AuthRepository
         $this->query_handler = new QueryHandlerModule();
     }
 
+    public function get_student_by_account($account_id)
+    {
+        $sql = "SELECT student_id, first_name, last_name, middle_name, program, year_level, block FROM students S
+        JOIN accounts A ON S.account_id = A.account_id  WHERE A.account_id = ? AND A.role = 'student';";
+        $values = [$account_id];
+
+        return $this->query_handler->handle_query($sql, $values, QueryTypes::SELECT_RECORD);
+    }
+
+    public function get_instructor_by_account($account_id)
+    {
+        $sql = "SELECT instructor_id, first_name, last_name, middle_name FROM instructors I
+        JOIN accounts A ON I.account_id = A.account_id  WHERE A.account_id = ? AND A.role = 'instructor';";
+        $values = [$account_id];
+
+        return $this->query_handler->handle_query($sql, $values, QueryTypes::SELECT_RECORD);
+    }
+
     public function get_account($email)
     {
         $sql = "SELECT * FROM accounts WHERE email = ?";
@@ -22,7 +40,7 @@ class AuthRepository
     public function add_account($credential, $role)
     {
         $sql = 'INSERT INTO accounts (email, password, role) VALUES (?, ?, ?)';
-        $values = [$credential->email, password_hash($credential->password, PASSWORD_BCRYPT),$role];
+        $values = [$credential->email, password_hash($credential->password, PASSWORD_BCRYPT), $role];
 
         return $this->query_handler->handle_query($sql, $values, QueryTypes::ADD_RECORD_GET_ID);
     }
@@ -31,10 +49,10 @@ class AuthRepository
     {
         $sql = 'INSERT INTO students (first_name, last_name, middle_name, account_id, program, year_level, block) VALUES (?, ?, ?, ?, ?, ?, ?)';
         $values = [
-            $student_data->first_name, 
-            $student_data->last_name, 
-            $student_data->middle_name, 
-            $account_id, 
+            $student_data->first_name,
+            $student_data->last_name,
+            $student_data->middle_name,
+            $account_id,
             $student_data->program,
             $student_data->year_level,
             $student_data->block
@@ -47,9 +65,9 @@ class AuthRepository
     {
         $sql = 'INSERT INTO instructors (first_name, last_name, middle_name, account_id) VALUES (?, ?, ?, ?)';
         $values = [
-            $instructor_data->first_name, 
-            $instructor_data->last_name, 
-            $instructor_data->middle_name, 
+            $instructor_data->first_name,
+            $instructor_data->last_name,
+            $instructor_data->middle_name,
             $account_id
         ];
 
@@ -73,13 +91,13 @@ class AuthRepository
                 FROM accounts AS a WHERE a.is_deleted = 0 AND a.account_id= ?";
         $values = [$id];
 
-        return $this->query_handler->handle_query($sql, $values, QueryTypes::SELECT_RECORD);  
+        return $this->query_handler->handle_query($sql, $values, QueryTypes::SELECT_RECORD);
     }
 
     public function get_instructor_account($email)
     {
-        $sql = "SELECT account_id AS id, email, password, role
-                FROM accounts WHERE role = 'instructor' AND is_deleted = 0 AND email = ?";
+        $sql = "SELECT A.account_id AS id, I.instructor_id, A.email, A.password, A.role
+                FROM accounts A JOIN instructors I ON A.account_id = I.account_id WHERE role = 'instructor' AND is_deleted = 0 AND email = ?";
         $values = [$email];
 
         return $this->query_handler->handle_query($sql, $values, QueryTypes::SELECT_RECORD);
@@ -87,8 +105,8 @@ class AuthRepository
 
     public function get_student_account($email)
     {
-        $sql = "SELECT account_id AS id, email, password, role
-                FROM accounts WHERE role = 'student' AND is_deleted = 0 AND email = ?";
+        $sql = "SELECT A.account_id AS id,S.student_id, A.email, A.password, A.role
+                FROM accounts A JOIN students S ON S.account_id = A.account_id WHERE role = 'student' AND is_deleted = 0 AND email = ?";
         $values = [$email];
 
         return $this->query_handler->handle_query($sql, $values, QueryTypes::SELECT_RECORD);

@@ -79,11 +79,11 @@ class AuthService
             $verified_password = password_verify($credentials->password, $user['password']);
 
             if (!$verified_password) {
-                return response(['message' => 'Invalid credentials'], 401);
+                return response(['message' => 'Invalid credentials'], 403);
             }
 
-            $refresh_token = $this->auth_module->generate_refresh_token($user['id']);
-            $access_token = $this->auth_module->generate_access_token($user['email'], $user['id'], RoleTypes::STUDENT);
+            $refresh_token = $this->auth_module->generate_refresh_token($user['student_id']);
+            $access_token = $this->auth_module->generate_access_token($user['email'], $user['student_id'], RoleTypes::STUDENT);
 
             //set http-only cookie
             $cookie_module = new CookieModule($refresh_token);
@@ -93,7 +93,9 @@ class AuthService
             header('Authorization: ' . $access_token);
             http_response_code(200);
 
-            return response(['message' => 'Logged in'], 200);
+            $student = $this->auth_repository->get_student_by_account($user['id']);
+
+            return response($student, 200);
         } else {
             return $this->validator->invalid_body();
         }
@@ -115,8 +117,8 @@ class AuthService
                 return response(['message' => 'Invalid credentials'], 401);
             }
 
-            $refresh_token = $this->auth_module->generate_refresh_token($user['id']);
-            $access_token = $this->auth_module->generate_access_token($user['email'], $user['id'], RoleTypes::INSTRUCTOR);
+            $refresh_token = $this->auth_module->generate_refresh_token($user['instructor_id']);
+            $access_token = $this->auth_module->generate_access_token($user['email'], $user['instructor_id'], RoleTypes::INSTRUCTOR);
 
             //set http-only cookie
             $cookie_module = new CookieModule($refresh_token);
@@ -126,13 +128,41 @@ class AuthService
             header('Authorization: ' . $access_token);
             http_response_code(200);
 
-            return response(['message' => 'Logged in'], 200);
+            $instructor = $this->auth_repository->get_instructor_by_account($user['id']);
+
+            return response($instructor, 200);
         } else {
             return $this->validator->invalid_body();
         }
     }
 
     function refresh_token()
+    {
+        if (isset($_COOKIE['_tr_uc'])) {
+
+            $refresh_token = new Token(extracted_token: $_COOKIE['_tr_uc']);
+
+            if (!$refresh_token->is_refresh_token()) {
+                throw new Exception('Invalid token type');
+            }
+
+            $user = $this->auth_repository->get_account_by_id($refresh_token->get_owner_id());
+            $user_role = ($user['role'] == 'student') ? RoleTypes::STUDENT : RoleTypes::INSTRUCTOR;
+
+            $refresh_token = $this->auth_module->generate_refresh_token($user['id']);
+            $access_token = $this->auth_module->generate_access_token($user['email'], $user['id'], $user_role);
+
+            //set Authorization header
+            header('Authorization: ' . $access_token);
+            http_response_code(200);
+
+            return response(['message' => 'Logged in'], 200);
+        } else {
+            return response(['message' => 'Invalid refresh token'], 200);
+        }
+    }
+
+    function instructor_refresh_token()
     {
         if (isset($_COOKIE['_tr_uc'])) {
 

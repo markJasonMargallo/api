@@ -20,6 +20,14 @@ class SubmissionRepository implements SubmissionTemplate
         return $this->query_handler->handle_query($sql, $values, QueryTypes::SELECT_RECORD);
     }
 
+    public function get_submission_score($item_id, $student_id)
+    {
+        $sql = "SELECT score FROM submissions WHERE item_id = ? AND student_id = ?;";
+        $values = [$item_id, $student_id];
+
+        return $this->query_handler->handle_query($sql, $values, QueryTypes::SELECT_RECORD);
+    }
+
     public function get_submission($submission_id)
     {
         $sql = "SELECT * FROM submissions WHERE submission_id = ?;";
@@ -35,6 +43,22 @@ class SubmissionRepository implements SubmissionTemplate
         $values = [$item_id];
 
         return $this->query_handler->handle_query($sql, $values, QueryTypes::SELECT_MULTIPLE_RECORDS);
+    }
+
+    public function get_student_submissions($body)
+    {
+        $sql = "SELECT * FROM submissions WHERE item_id = ? AND student_id = ?;";
+        $values = [$body->item_id, $body->student_id];
+
+        return $this->query_handler->handle_query($sql, $values, QueryTypes::SELECT_RECORD);
+    }
+
+    public function get_student_submission($item_id, $student_id)
+    {
+        $sql = "SELECT * FROM submissions WHERE item_id = ? AND student_id = ?;";
+        $values = [$item_id, $student_id];
+
+        return $this->query_handler->handle_query($sql, $values, QueryTypes::SELECT_RECORD);
     }
 
     public function add_submission($submission_data, $student_id)

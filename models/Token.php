@@ -22,7 +22,8 @@ class Token
      * @param  integer $expiration type of the token. Default = 600s (10 mins)
      * @param  string $extracted_token token attached to the current request. Default = 'null'
      */
-    public function __construct($email = null, $id = null, RoleTypes $role = RoleTypes::STUDENT, TokenTypes $type = TokenTypes::ACCESS, $expiration = 600, $extracted_token = null)
+    
+    public function __construct($email = null, $id = null, RoleTypes $role = RoleTypes::STUDENT, TokenTypes $type = TokenTypes::ACCESS, $expiration = 86400, $extracted_token = null)
     {
 
         $this->validator = new Validation();
@@ -185,5 +186,9 @@ class Token
     public function get_owner_email()
     {
         return $this->get_payload()->email;
+    }
+
+    public function get_student_id(){
+        
     }
 }

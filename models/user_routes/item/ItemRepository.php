@@ -14,8 +14,8 @@ class ItemRepository implements ItemTemplate
 
     public function add_item($item_data)
     {
-        $sql = 'INSERT INTO items (item_instruction, item_score, activity_id) VALUES (?, ?, ?);';
-        $values = [$item_data->item_instruction, $item_data->item_score, $item_data->activity_id];
+        $sql = 'INSERT INTO items (item_name, constraints, item_instruction, sample_input, sample_output, explanation, item_score, activity_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?);';
+        $values = [$item_data->item_name, $item_data->constraints, $item_data->item_instruction, $item_data->sample_input, $item_data->sample_output, $item_data->explanation, $item_data->item_score, $item_data->activity_id];
 
         return $this->query_handler->handle_query($sql, $values, QueryTypes::ADD_RECORD);
     }
@@ -54,4 +54,11 @@ class ItemRepository implements ItemTemplate
         return $this->query_handler->handle_query($sql, $values, QueryTypes::UPDATE_RECORD);
     }
 
+    public function add_item_by_id($item_data, $activity_id)
+    {
+        $sql = 'INSERT INTO items (item_name, constraints, item_instruction, sample_input, sample_output, explanation, item_score, activity_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?);';
+        $values = [$item_data->item_name, $item_data->constraints, $item_data->item_instruction, $item_data->sample_input, $item_data->sample_output, $item_data->explanation, $item_data->item_score, $activity_id];
+
+        return $this->query_handler->handle_query($sql, $values, QueryTypes::ADD_RECORD_GET_ID);
+    }
 }

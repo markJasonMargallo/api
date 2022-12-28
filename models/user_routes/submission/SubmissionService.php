@@ -27,6 +27,11 @@ class SubmissionService implements SubmissionTemplate
         return response($this->submission_repository->get_submissions($item_id), 200);
     }
 
+    public function get_student_submissions($body)
+    {
+        return response($this->submission_repository->get_student_submissions($body), 200);
+    }
+
     public function add_submission($submission_data, $student_id)
     {
         if($this->submission_repository->find_submission($student_id, $submission_data->item_id)){

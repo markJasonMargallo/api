@@ -41,17 +41,18 @@ class ActivityRoutes
             $next_route = $url[1];
         }
 
-        if($next_route == 'item' || $next_route == 'items' ){
+        if ($next_route == 'item' || $next_route == 'items') {
             $item_routes = new ItemRoutes($this->request_data, $this->middleware, $this->parent_route);
             $item_routes->handle_url();
-        }else{
+        } else {
             if ($parent_route == 'instructor') {
 
                 switch ($this->method) {
                     case 'POST':
-                        echo $this->middleware->get_owner_id();
                         if ($current_route == 'activity' && $count == 1) {
-                            echo json_encode($this->activity_service->add_activity($this->middleware->get_owner_id(), $request_body));
+                            echo json_encode($this->activity_service->create_activity($request_body));
+                        } else if ($current_route == 'activity' && $count == 2 && $next_route == 'summary') {
+                            echo json_encode($this->activity_service->get_activity_summary($request_body));
                         }
                         break;
                     case 'GET':
@@ -65,9 +66,17 @@ class ActivityRoutes
                             } else {
                                 throw new NotFoundException();
                             }
+                        } else if ($current_route == 'activities' && $count == 2) {
+                            if (intval($next_route) > 0) {
+                                echo json_encode($this->activity_service->get_activities($next_route, $this->middleware->get_owner_id()));
+                            } else {
+                                throw new NotFoundException();
+                            }
+                            // echo json_encode($this->activity_service->get_activities_by_instructor($this->middleware->get_owner_id()));
                         } else if ($current_route == 'activities') {
                             echo json_encode($this->activity_service->get_activities_by_instructor($this->middleware->get_owner_id()));
-                            // echo json_encode($this->activity_service->get_activities($next_route, $this->middleware->get_owner_id()));
+                        } else {
+                            throw new NotFoundException();
                         }
                         break;
                     case 'PUT':
@@ -83,21 +92,22 @@ class ActivityRoutes
                     default:
                         throw new NotFoundException();
                 }
-
-            } else if($parent_route == 'student') {
+            } else if ($parent_route == 'student') {
                 switch ($this->method) {
                     case 'POST':
-                        echo $this->middleware->get_owner_id();
+                        // echo $this->middleware->get_owner_id();
                         if ($current_route == 'activities' && $count == 1) {
-                            echo json_encode($this->activity_service->get_activities_by_block($request_body,));
+                            echo json_encode($this->activity_service->get_activities_by_student($request_body,));
                         }
                         break;
                     case 'GET':
                         if ($params) {
                             echo json_encode($this->activity_service->search_activity($params['search']));
-                        }
+                        } else if ($current_route == 'activity' && $count == 2 && $next_route == 'summary') {
 
-                        if ($current_route == 'activity' && $count == 2) {
+                            echo json_encode($this->activity_service->get_activity_summary($request_body));
+                            
+                        }else if ($current_route == 'activity' && $count == 2) {
                             if (intval($next_route) > 0) {
                                 echo json_encode($this->activity_service->get_activity($next_route));
                             } else {
@@ -111,7 +121,6 @@ class ActivityRoutes
                         throw new NotFoundException();
                 }
             }
-
         }
     }
 }

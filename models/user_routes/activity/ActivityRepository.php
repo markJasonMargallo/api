@@ -13,7 +13,16 @@ class ActivityRepository implements ActivityTemplate
         $this->query_handler = new QueryHandlerModule();
     }
 
-    public function add_activity($room_id, $activity_data)
+
+    private function parseDate($date_string){
+
+        $parsed_date = explode('.', $date_string)[0];
+        $parsed_date = explode('T', $parsed_date);
+
+        return $parsed_date[0]." ". $parsed_date[1];
+    }
+
+    public function add_activity($activity_data)
     {
         $sql = 'INSERT INTO activities (activity_name, activity_description, room_id, deadline, language_specified) 
         VALUES (?, ?, ?, ?, ?);';
@@ -22,7 +31,7 @@ class ActivityRepository implements ActivityTemplate
             $activity_data->activity_name,
             $activity_data->activity_description,
             $activity_data->room_id,
-            $activity_data->deadline,
+            $this->parseDate($activity_data->deadline) ,
             $activity_data->language_specified,
         ];
 
@@ -31,7 +40,7 @@ class ActivityRepository implements ActivityTemplate
 
     public function get_activity($id)
     {
-        $sql = "SELECT * FROM activities WHERE is_deleted = 0 AND activity_id = ?;";
+        $sql = "SELECT * FROM activities AS A JOIN rooms as R ON A.room_id = R.room_id WHERE A.is_deleted = 0 AND A.activity_id = ?;";
         $values = [$id];
 
         return $this->query_handler->handle_query($sql, $values, QueryTypes::SELECT_RECORD);
@@ -96,6 +105,23 @@ class ActivityRepository implements ActivityTemplate
 
         return $this->query_handler->handle_query($sql, $values, QueryTypes::SELECT_MULTIPLE_RECORDS);
     }
+
+    public function _activity($room_id, $activity_data)
+    {
+        $sql = 'INSERT INTO activities (activity_name, activity_description, room_id, deadline, language_specified) 
+        VALUES (?, ?, ?, ?, ?);';
+
+        $values = [
+            $activity_data->activity_name,
+            $activity_data->activity_description,
+            $activity_data->room_id,
+            $activity_data->deadline,
+            $activity_data->language_specified,
+        ];
+
+        return $this->query_handler->handle_query($sql, $values, QueryTypes::ADD_RECORD);
+    }
+
 
 
 }

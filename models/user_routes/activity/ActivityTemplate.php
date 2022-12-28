@@ -1,7 +1,7 @@
 <?php
 interface ActivityTemplate
 {
-    public function add_activity($room_id, $activity_details);
+    public function add_activity($activity_details);
 
     public function get_activity($activity_id);
 

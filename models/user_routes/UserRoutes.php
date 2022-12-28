@@ -1,8 +1,9 @@
 <?php
 require_once('./models/exception/NotFoundException.php');
-require_once('./models/user_routes/room/RoomRoutes.php');
+require_once('./models/user_routes/course/CourseRoutes.php');
 require_once('./models/exception/AuthorizationException.php');
 require_once('./models/exception/AuthenticationException.php');
+require_once('./models/user_routes/room/RoomRoutes.php');
 
 
 class UserRoutes
@@ -67,9 +68,9 @@ class UserRoutes
         }
 
         switch ($current_route) {
-            case ('room' || 'rooms'):
-                $room_routes = new RoomRoutes($this->request_data, $this->middleware, $parent_route);
-                $room_routes->handle_url();
+            case ('course' || 'courses'):
+                $course_routes = new CourseRoutes($this->request_data, $this->middleware, $parent_route);
+                $course_routes->handle_url();
                 break;
             default:
                 throw new NotFoundException();

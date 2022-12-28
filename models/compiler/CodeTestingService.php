@@ -56,7 +56,7 @@ class CodeTestingService
 
             $total_score += $condition['points'];
 
-            if ($condition['is_visible'] > 0 || $is_instructor) {
+            if ($condition['is_visible'] > 0|| $is_instructor) {
                 $rest = array(
                     "hidden" => false,
                     "id" => $test_id,
@@ -70,7 +70,7 @@ class CodeTestingService
                     "hidden" => true,
                     "id" => $test_id,
                     "input" => "hidden",
-                    "output" => $output->output,
+                    "output" => "hidden",
                     "expected_output" => "hidden",
                     "status" => $test_status,
                 );

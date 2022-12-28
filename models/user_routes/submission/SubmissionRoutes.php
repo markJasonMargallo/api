@@ -34,7 +34,7 @@ class SubmissionRoutes
         $count = count($url);
         $current_route = $url[0];
         $next_route = null;
-        
+
         if ($count > 1) {
             $next_route = $url[1];
         }
@@ -52,14 +52,21 @@ class SubmissionRoutes
                         echo json_encode($this->submission_service->get_submissions($next_route));
                     }
                     break;
+                case 'POST':
+                    if ($current_route == 'submissions') {
+                        echo json_encode($this->submission_service->get_student_submissions($request_body));
+                    }
+                    break;
                 default:
                     throw new NotFoundException();
             }
-        }else if ($parent_route == 'student') {
+        } else if ($parent_route == 'student') {
             switch ($this->method) {
                 case 'POST':
                     if ($current_route == 'submission') {
                         echo json_encode($this->submission_service->add_submission($request_body, $this->middleware->get_owner_id()));
+                    } elseif ($current_route == 'submissions') {
+                        echo json_encode($this->submission_service->get_student_submissions($request_body));
                     }
                     break;
                 case 'GET':
@@ -70,7 +77,6 @@ class SubmissionRoutes
                             throw new NotFoundException();
                         }
                     } else if ($current_route == 'submissions' && $count == 2) {
-                        echo 'here';
                         echo json_encode($this->submission_service->get_submissions($next_route));
                     }
                     break;
@@ -83,9 +89,5 @@ class SubmissionRoutes
                     throw new NotFoundException();
             }
         }
-
-
-
-        
     }
 }

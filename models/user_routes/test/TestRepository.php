@@ -20,6 +20,14 @@ class TestRepository implements TestTemplate
         return $this->query_handler->handle_query($sql, $values, QueryTypes::ADD_RECORD);
     }
 
+    public function add_test_by_item_id($test_data, $item_id)
+    {
+        $sql = 'INSERT INTO tests (input, output, points, is_visible, item_id) VALUES (?, ?, ?, ?, ?);';
+        $values = [$test_data->input, $test_data->output, $test_data->points, $test_data->is_visible, $item_id];
+
+        return $this->query_handler->handle_query($sql, $values, QueryTypes::ADD_RECORD_GET_ID);
+    }
+
     public function update_test($test_data)
     {
         $sql = "UPDATE tests SET input = ?, output = ?, points = ?, is_visible = ?

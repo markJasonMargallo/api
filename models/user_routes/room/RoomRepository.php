@@ -39,7 +39,7 @@ class RoomRepository implements RoomTemplate
 
     public function get_instructor_rooms($instructor_id)
     {
-        $sql = "SELECT * FROM rooms WHERE is_deleted = 0 AND instructor_id = ?;";
+        $sql = "SELECT * FROM rooms as R JOIN instructors as I ON R.instructor_id = I.instructor_id  WHERE R.is_deleted = 0 AND R.instructor_id = ?;";
         $values = [$instructor_id];
 
         return $this->query_handler->handle_query($sql, $values, QueryTypes::SELECT_MULTIPLE_RECORDS);
@@ -65,8 +65,10 @@ class RoomRepository implements RoomTemplate
 
     public function get_student_rooms($room_data)
     {
-        $sql = "SELECT * FROM rooms WHERE is_deleted = 0 AND program = ? AND year_level = ? AND block = ?;";
-        $values = [$room_data->program, $room_data->year_level, $room_data->block];
+        $sql = "SELECT * FROM rooms as R JOIN instructors as I ON R.instructor_id = I.instructor_id  
+        WHERE is_deleted = 0 AND program = ? AND year_level = ? AND block = ?;";
+        
+        $values = [$room_data->program, $room_data->year_level, $room_data->block ];
 
         return $this->query_handler->handle_query($sql, $values, QueryTypes::SELECT_MULTIPLE_RECORDS);
     }
