@@ -35,6 +35,7 @@ class RoomRoutes
      */
     public function handle_url(): void
     {
+        
         $parent_route = $this->parent_route;
         $request_body = json_decode(file_get_contents('php://input'));
         $params = $this->request_data->get_request_params();
@@ -46,7 +47,6 @@ class RoomRoutes
         if ($count > 1) {
             $next_route = $url[1];
         }
-
 
         if ($next_route == 'activity' || $next_route == 'activities') {
 
@@ -70,21 +70,21 @@ class RoomRoutes
                         }
                         break;
                     case 'GET':
-
                         if ($params) {
                             echo json_encode($this->room_service->search_rooms($params['search']));
                         }
 
                         if ($current_route == 'room') {
-
                             if (intval($next_route) > 0) {
                                 echo json_encode($this->room_service->get_room($next_route));
                             } else {
                                 throw new NotFoundException();
                             }
                         } else if ($current_route == 'rooms') {
-
-                            echo json_encode($this->room_service->get_instructor_rooms($this->middleware->get_owner_id()));
+                            if($next_route){
+                                echo json_encode($this->room_service->get_course_rooms($next_route));
+                            }
+                            // echo json_encode($this->room_service->get_instructor_rooms($this->middleware->get_owner_id()));
                         }
                         break;
                     case 'PUT':
@@ -100,7 +100,6 @@ class RoomRoutes
                     default:
                         throw new NotFoundException();
                 }
-
             } else if($parent_route == 'student'){
 
                 switch ($this->method) {

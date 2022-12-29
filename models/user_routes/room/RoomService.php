@@ -42,6 +42,11 @@ class RoomService implements RoomTemplate
         return response($this->room_repository->get_room($id), 200);
     }
 
+    public function get_course_rooms($course_uuid)
+    {
+        return response($this->room_repository->get_course_rooms($course_uuid), 200);
+    }
+
     public function search_rooms($search_string)
     {
         return response($this->room_repository->search_rooms($search_string), 200);
@@ -62,9 +67,9 @@ class RoomService implements RoomTemplate
         
     }
 
-    public function delete_room($room_id)
+    public function delete_room($room_uuid)
     {
-        if ($this->room_repository->delete_room($room_id)) {
+        if ($this->room_repository->delete_room($room_uuid)) {
             return response(["message" => "Room deleted."], 200);
         } else {
             return response(["message" => "Resource not found."], 404);

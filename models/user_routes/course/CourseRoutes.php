@@ -24,7 +24,7 @@ class CourseRoutes
 
         $this->url = explode('/', $this->request_data->get_request_url());
 
-        $trimmed_url = str_replace('room/', '', $this->request_data->get_request_url());
+        $trimmed_url = str_replace('course/', '', $this->request_data->get_request_url());
         $this->request_data->set_url($trimmed_url);
 
         $this->method = $this->request_data->get_request_method();
@@ -61,6 +61,7 @@ class CourseRoutes
             $activity_routes->handle_url();
 
         } else if ($next_route == 'room' || $next_route == 'rooms') {
+            
             $room_routes = new RoomRoutes($this->request_data, $this->middleware, $parent_route);
             $room_routes->handle_url();
 
